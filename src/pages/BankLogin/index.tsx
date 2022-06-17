@@ -8,7 +8,7 @@ const BankLogin = () => {
         style={{ fontSize: '42px' }}
         className="mt-6 font-poppins font-semibold text-blue1"
       >
-        Lorem Ipsum
+        Crypto Swift
       </div>
       <BankLoginCard />
     </div>
