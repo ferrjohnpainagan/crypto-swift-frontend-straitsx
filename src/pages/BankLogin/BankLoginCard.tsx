@@ -14,7 +14,7 @@ const BankLoginCard = () => {
         <button
           type="button"
           style={{ width: '30vw' }}
-          className=" mt-12 rounded-lg bg-blue1 py-3 font-workSans text-white"
+          className="mt-12 rounded-lg bg-blue1 py-3 font-workSans text-white hover:bg-blue2"
         >
           Login To Bank
         </button>
