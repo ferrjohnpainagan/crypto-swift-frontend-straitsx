@@ -1,5 +1,6 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
+import Check from '../../assets/check.svg'
 
 const Stepper = () => {
   const location = useLocation()
@@ -45,7 +46,13 @@ const Stepper = () => {
                   : 'border-blue1 bg-blue1'
               } text-white`}
             >
-              1
+              {styleStep('bank-login') === 'isBefore' ? (
+                <>
+                  <img src={Check} style={{ width: '15px' }} />
+                </>
+              ) : (
+                '1'
+              )}
             </div>
             <div
               className={`text-md absolute top-0 -ml-10 mt-16 w-32 text-center font-roboto font-bold ${
@@ -76,7 +83,13 @@ const Stepper = () => {
                   : 'border-blue1 bg-blue1'
               } text-white`}
             >
-              2
+              {styleStep('cash-in') === 'isBefore' ? (
+                <>
+                  <img src={Check} style={{ width: '15px' }} />
+                </>
+              ) : (
+                '2'
+              )}
             </div>
             <div
               className={`text-md absolute top-0 -ml-10 mt-16 w-32 text-center font-roboto font-bold ${
@@ -109,7 +122,13 @@ const Stepper = () => {
                   : 'border-blue1 bg-blue1'
               } text-white`}
             >
-              3
+              {styleStep('exchange') === 'isBefore' ? (
+                <>
+                  <img src={Check} style={{ width: '15px' }} />
+                </>
+              ) : (
+                '3'
+              )}
             </div>
             <div
               className={`text-md absolute top-0 -ml-10 mt-16 w-32 text-center font-roboto font-bold ${
@@ -142,7 +161,13 @@ const Stepper = () => {
                   : 'border-blue1 bg-blue1'
               } text-white`}
             >
-              4
+              {styleStep('cash-out') === 'isBefore' ? (
+                <>
+                  <img src={Check} style={{ width: '15px' }} />
+                </>
+              ) : (
+                '4'
+              )}
             </div>
             <div
               className={`text-md absolute top-0 -ml-10 mt-16 w-32 text-center font-roboto font-bold ${
