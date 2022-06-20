@@ -3,15 +3,11 @@ import BankLoginCard from './BankLoginCard'
 
 const BankLogin = () => {
   return (
-    <div className="mt-14 flex justify-center">
-      <div
-        style={{ fontSize: '42px' }}
-        className="mt-6 font-poppins font-semibold text-blue1"
-      >
-        Crypto Swift
+    <>
+      <div>
+        <BankLoginCard />
       </div>
-      <BankLoginCard />
-    </div>
+    </>
   )
 }
 
