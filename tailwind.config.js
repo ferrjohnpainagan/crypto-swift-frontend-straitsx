@@ -17,6 +17,7 @@ module.exports = {
         indigo1: '#474E6D',
         defaultBg: '#F9F9F9',
         cardStroke: '#E8E8E8',
+        vanilla1: '#f5f5f5',
       },
     },
   },
