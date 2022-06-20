@@ -34,8 +34,8 @@ const Stepper = () => {
     }
   }
   return (
-    <div>
-      <div className="mx-4 p-4">
+    <div className="mt-10 flex justify-center">
+      <div style={{ width: '50vw' }} className="mx-4 p-4">
         <div className="flex items-center">
           <div className="relative flex items-center">
             <div

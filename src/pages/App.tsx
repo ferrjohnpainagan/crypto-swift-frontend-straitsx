@@ -14,13 +14,22 @@ function App() {
   return (
     <div className="m-0 h-screen w-screen bg-defaultBg p-0">
       <Header />
-      <Routes>
-        <Route path="/bank-login" element={<BankLogin />} />
-        <Route path="/cash-in" element={<CashIn />} />
-        <Route path="/exchange" element={<Exchange />} />
-        <Route path="/cash-out" element={<CashOut />} />
-        <Route path="/success" element={<Success />} />
-      </Routes>
+      <div className="mt-14 flex justify-center">
+        <div
+          style={{ fontSize: '42px' }}
+          className="mt-6 font-poppins font-semibold text-blue1"
+        >
+          Crypto Swift
+        </div>
+        <Routes>
+          <Route path="/bank-login" element={<BankLogin />} />
+          <Route path="/cash-in" element={<CashIn />} />
+          <Route path="/exchange" element={<Exchange />} />
+          <Route path="/cash-out" element={<CashOut />} />
+          <Route path="/success" element={<Success />} />
+        </Routes>
+      </div>
+
       <Stepper />
     </div>
   )
