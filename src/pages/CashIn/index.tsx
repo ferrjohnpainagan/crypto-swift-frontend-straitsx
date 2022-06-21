@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
+import Dropdown from 'components/Dropdown'
+import Sgd from '../../assets/sgd.svg'
 
 const CashIn = () => {
   const [amount, setAmount] = useState('0.0')
+  const [currency, setCurrency] = useState<any>('')
+  const choices = [{ currency: 'SGD', image: Sgd }]
   return (
     <div
       style={{ width: '30vw' }}
@@ -12,7 +16,14 @@ const CashIn = () => {
       </div>
 
       <div className="flex items-center justify-between px-8 py-6">
-        <div>Dropdown</div>
+        <div>
+          <Dropdown
+            name={'Select'}
+            options={choices}
+            selected={currency}
+            setSelected={setCurrency}
+          />
+        </div>
         <div style={{ width: '18vw' }}>
           <div className="text-md font-workSans font-semibold">Amount</div>
           <div className="flex justify-between rounded-lg bg-vanilla1 p-3 align-bottom">
