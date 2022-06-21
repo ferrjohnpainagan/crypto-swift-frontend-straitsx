@@ -1,11 +1,19 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Dropdown from 'components/Dropdown'
 import Sgd from '../../assets/sgd.svg'
 
 const CashIn = () => {
   const [amount, setAmount] = useState('0.0')
   const [currency, setCurrency] = useState<any>('')
+  const navigate = useNavigate()
   const choices = [{ currency: 'SGD', image: Sgd }]
+
+  const handleCashIn = () => {
+    navigate('/success/cash-in', {
+      state: { amount: amount, currency: currency },
+    })
+  }
   return (
     <div
       style={{ width: '30vw' }}
@@ -45,11 +53,14 @@ const CashIn = () => {
           <button
             type="button"
             className={`mt-6 w-full rounded-lg ${
-              parseFloat(amount) > 0 ? 'bg-blue1 hover:bg-blue2' : 'bg-gray1'
+              parseFloat(amount) > 0 && currency !== ''
+                ? 'bg-blue1 hover:bg-blue2'
+                : 'bg-gray1'
             }  py-3 font-workSans text-white`}
-            disabled={!(parseFloat(amount) > 0)}
+            disabled={!(parseFloat(amount) > 0 && currency !== '')}
+            onClick={handleCashIn}
           >
-            Deposit
+            Cash-in
           </button>
         </div>
       </div>
