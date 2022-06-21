@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Dropdown from 'components/Dropdown'
-import Sgd from '../../assets/sgd.svg'
+import { CURRENCIES } from 'constants/index'
 
 const CashIn = () => {
   const [amount, setAmount] = useState('0.0')
   const [currency, setCurrency] = useState<any>('')
   const navigate = useNavigate()
-  const choices = [{ currency: 'SGD', image: Sgd }]
 
   const handleCashIn = () => {
     navigate('/success/cash-in', {
@@ -16,7 +15,7 @@ const CashIn = () => {
   }
   return (
     <div
-      style={{ width: '30vw' }}
+      style={{ width: '35vw' }}
       className="mx-32 flex flex-col rounded-xl border border-solid border-cardStroke bg-white"
     >
       <div className="flex h-16 w-full items-center border-b pl-8">
@@ -27,7 +26,7 @@ const CashIn = () => {
         <div>
           <Dropdown
             name={'Select'}
-            options={choices}
+            options={CURRENCIES}
             selected={currency}
             setSelected={setCurrency}
           />
@@ -56,7 +55,7 @@ const CashIn = () => {
               parseFloat(amount) > 0 && currency !== ''
                 ? 'bg-blue1 hover:bg-blue2'
                 : 'bg-gray1'
-            }  py-3 font-workSans text-white`}
+            }  py-3 font-workSans font-medium text-white`}
             disabled={!(parseFloat(amount) > 0 && currency !== '')}
             onClick={handleCashIn}
           >
@@ -64,7 +63,7 @@ const CashIn = () => {
           </button>
         </div>
       </div>
-      <div className="px-8">
+      <div className="px-8 font-workSans text-black1">
         <div className="flex justify-between">
           <div className="text-xs">Deposited amount</div>
           <div className="text-xs">----</div>

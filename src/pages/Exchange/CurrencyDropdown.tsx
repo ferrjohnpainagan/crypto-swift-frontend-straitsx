@@ -4,7 +4,7 @@ import { ChevronDownIcon } from '@heroicons/react/solid'
 
 import { DropdownInterface } from 'interfaces'
 
-const Dropdown = ({
+const CurrencyDropdown = ({
   name,
   options,
   selected,
@@ -15,19 +15,13 @@ const Dropdown = ({
   }
 
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu as="div" className="relative inline-block pl-2 text-left">
       <div>
-        <Menu.Button className="inline-flex w-full items-center justify-center rounded-md border-0 bg-white py-2 text-sm font-medium text-gray-700  outline-none hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue1 focus:ring-offset-2 focus:ring-offset-gray-100">
+        <Menu.Button className="inline-flex w-full items-center justify-center rounded-md border-0 bg-white font-workSans text-black1 outline-none hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue1 focus:ring-offset-2 focus:ring-offset-gray-100">
           {selected === '' ? (
             name
           ) : (
-            <div className="flex items-center">
-              <img
-                src={selected.image}
-                className="mr-2 rounded-full shadow-md"
-              />
-              {selected.currency}
-            </div>
+            <div className="flex items-center">{selected.currency}</div>
           )}
           <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
         </Menu.Button>
@@ -56,10 +50,6 @@ const Dropdown = ({
                       )}
                       onClick={() => setSelected(item)}
                     >
-                      <img
-                        src={item.image}
-                        className="mr-2 rounded-full shadow-md"
-                      />
                       {item.currency}
                     </a>
                   )}
@@ -73,4 +63,4 @@ const Dropdown = ({
   )
 }
 
-export default Dropdown
+export default CurrencyDropdown
