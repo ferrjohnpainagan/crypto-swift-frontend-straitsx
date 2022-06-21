@@ -18,6 +18,7 @@ module.exports = {
         defaultBg: '#F9F9F9',
         cardStroke: '#E8E8E8',
         vanilla1: '#f5f5f5',
+        black1: '#404040',
       },
     },
   },

@@ -2,12 +2,7 @@ import React, { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/solid'
 
-interface DropdownInterface {
-  name: string
-  options: any
-  selected: any
-  setSelected: any
-}
+import { DropdownInterface } from 'interfaces'
 
 const Dropdown = ({
   name,

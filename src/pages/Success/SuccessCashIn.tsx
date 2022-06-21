@@ -16,7 +16,7 @@ const SuccessCashIn = (props) => {
         <div className="py-2 font-workSans text-xl font-semibold text-blue1">
           Cash-in Successful
         </div>
-        <div className="font-workSanse py-1 text-sm">
+        <div className="py-1 font-workSans text-sm">
           Cash-in exactly {amount} {currency.currency}
         </div>
         <div className="py-1 font-workSans text-blue1 underline hover:cursor-pointer">
