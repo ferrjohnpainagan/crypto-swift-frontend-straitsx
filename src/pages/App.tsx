@@ -26,7 +26,7 @@ function App() {
           <Route path="/cash-in" element={<CashIn />} />
           <Route path="/exchange" element={<Exchange />} />
           <Route path="/cash-out" element={<CashOut />} />
-          <Route path="/success" element={<Success />} />
+          <Route path="/success/:type" element={<Success />} />
         </Routes>
       </div>
 
