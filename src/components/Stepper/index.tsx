@@ -5,11 +5,12 @@ import Check from '../../assets/check.svg'
 const Stepper = () => {
   const location = useLocation()
   const currentPath = location.pathname.substring(1)
-  const steps = ['bank-login', 'cash-in', 'exchange', 'cash-out', 'success']
+
+  const steps = ['bank-login', 'cash-in', 'exchange', 'cash-out']
   const getIndex = (step: string) => {
     let stepIndex
     steps.map((value, index) => {
-      if (value.includes(step)) {
+      if (step.includes(value)) {
         stepIndex = index
       }
     })
@@ -19,7 +20,7 @@ const Stepper = () => {
   const isBefore = (step: string) => {
     const currentPathIndex = getIndex(currentPath)
     const stepIndex = getIndex(step)
-
+    console.log(currentPathIndex, stepIndex, currentPathIndex > stepIndex)
     return currentPathIndex > stepIndex
   }
 

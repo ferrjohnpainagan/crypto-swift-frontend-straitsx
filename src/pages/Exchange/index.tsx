@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Card from 'components/Card'
 import CurrencyDropdown from './CurrencyDropdown'
 import { CURRENCIES } from 'constants/index'
@@ -8,7 +9,19 @@ import ExchangeIcon from '../../assets/exchange.svg'
 const Exchange = () => {
   const [sell, setSell] = useState({ currency: 'SGD' })
   const [buy, setBuy] = useState({ currency: 'IDR' })
+  const [sellAmount, setSellAmount] = useState('')
+  const [buyAmount, setBuyAmount] = useState('')
   const [status, setStatus] = useState()
+  const navigate = useNavigate()
+
+  const handleExchange = () => {
+    navigate('/success/exchange', {
+      state: {
+        sell: `${sellAmount} ${sell.currency}`,
+        buy: `${buyAmount} ${buy.currency}`,
+      },
+    })
+  }
 
   return (
     <Card width={'35vw'}>
@@ -33,6 +46,8 @@ const Exchange = () => {
               <input
                 type="text"
                 className="h-16 w-full rounded-xl bg-vanilla1 px-3 text-center text-xl"
+                value={sellAmount}
+                onChange={(e) => setSellAmount(e.target.value)}
               />
             </div>
           </div>
@@ -53,6 +68,8 @@ const Exchange = () => {
               <input
                 type="text"
                 className="h-16 w-full rounded-xl bg-vanilla1 px-3 text-center text-xl"
+                value={buyAmount}
+                onChange={(e) => setBuyAmount(e.target.value)}
               />
             </div>
           </div>
@@ -63,7 +80,7 @@ const Exchange = () => {
             type="button"
             className={`hover:bg-blue2' mt-6 w-full rounded-lg bg-blue1 py-3 font-workSans font-medium text-white hover:bg-blue2`}
             // disabled={!(parseFloat(amount) > 0 && currency !== '')}
-            // onClick={handleCashIn}
+            onClick={handleExchange}
           >
             Exchange
           </button>

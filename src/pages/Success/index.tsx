@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import _ from 'lodash'
 import { useLocation, useNavigate } from 'react-router-dom'
 import SuccessCashIn from './SuccessCashIn'
+import SuccessExchange from './SuccessExchange'
 
 const Success = () => {
   const location = useLocation()
@@ -17,7 +18,7 @@ const Success = () => {
         navigate('/exchange')
         break
       case 'cash-out':
-        navigate('cash-out')
+        navigate('/cash-out')
         break
       default:
         break
@@ -34,7 +35,8 @@ const Success = () => {
   switch (true) {
     case currentPath.includes('cash-in'):
       return <SuccessCashIn state={pathState} nextBtn={handleNext} />
-
+    case currentPath.includes('exchange'):
+      return <SuccessExchange state={pathState} nextBtn={handleNext} />
     default:
       return <></>
   }
