@@ -1,7 +1,12 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import BankLogo from '../../assets/bank-logo.svg'
 
 const BankLoginCard = () => {
+  const navigate = useNavigate()
+  const handleLoginBank = () => {
+    navigate('/cash-in')
+  }
   return (
     <div
       style={{ width: '50vw' }}
@@ -15,6 +20,7 @@ const BankLoginCard = () => {
           type="button"
           style={{ width: '30vw' }}
           className="mt-12 rounded-lg bg-blue1 py-3 font-workSans text-white hover:bg-blue2"
+          onClick={handleLoginBank}
         >
           Login To Bank
         </button>

@@ -20,7 +20,7 @@ const Stepper = () => {
   const isBefore = (step: string) => {
     const currentPathIndex = getIndex(currentPath)
     const stepIndex = getIndex(step)
-    console.log(currentPathIndex, stepIndex, currentPathIndex > stepIndex)
+
     return currentPathIndex > stepIndex
   }
 
