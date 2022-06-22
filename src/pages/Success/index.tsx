@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { useLocation, useNavigate } from 'react-router-dom'
 import SuccessCashIn from './SuccessCashIn'
 import SuccessExchange from './SuccessExchange'
+import SuccessCashOut from './SuccessCashOut'
 
 const Success = () => {
   const location = useLocation()
@@ -37,6 +38,8 @@ const Success = () => {
       return <SuccessCashIn state={pathState} nextBtn={handleNext} />
     case currentPath.includes('exchange'):
       return <SuccessExchange state={pathState} nextBtn={handleNext} />
+    case currentPath.includes('cash-out'):
+      return <SuccessCashOut state={pathState} />
     default:
       return <></>
   }
