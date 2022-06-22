@@ -32,7 +32,9 @@ const CashIn = () => {
           />
         </div>
         <div style={{ width: '18vw' }}>
-          <div className="text-md font-workSans font-semibold">Amount</div>
+          <div className="text-md font-workSans font-semibold text-black1">
+            Amount
+          </div>
           <div className="flex justify-between rounded-lg bg-vanilla1 p-3 align-bottom">
             <div className="flex flex-col">
               <div className="font-workSans text-xs">BALANCE: 120,420</div>
