@@ -9,7 +9,7 @@ const CashIn = () => {
   const navigate = useNavigate()
 
   const handleCashIn = () => {
-    navigate('/success/cash-in', {
+    navigate('/remit/success/cash-in', {
       state: { amount: amount, currency: currency },
     })
   }

@@ -15,7 +15,7 @@ const Exchange = () => {
   const navigate = useNavigate()
 
   const handleExchange = () => {
-    navigate('/success/exchange', {
+    navigate('/remit/success/exchange', {
       state: {
         sell: `${sellAmount} ${sell.currency}`,
         buy: `${buyAmount} ${buy.currency}`,

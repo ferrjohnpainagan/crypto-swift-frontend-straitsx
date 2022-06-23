@@ -9,6 +9,7 @@ import CashIn from './CashIn'
 import Exchange from './Exchange'
 import CashOut from './CashOut'
 import Success from './Success'
+import Wallet from './Wallet'
 
 function App() {
   return (
@@ -22,11 +23,18 @@ function App() {
           Crypto Swift
         </div>
         <Routes>
-          <Route path="/bank-login" element={<BankLogin />} />
-          <Route path="/cash-in" element={<CashIn />} />
-          <Route path="/exchange" element={<Exchange />} />
-          <Route path="/cash-out" element={<CashOut />} />
-          <Route path="/success/:type" element={<Success />} />
+          <Route path="/remit">
+            <Route path="bank-login" element={<BankLogin />} />
+            <Route path="cash-in" element={<CashIn />} />
+            <Route path="exchange" element={<Exchange />} />
+            <Route path="cash-out" element={<CashOut />} />
+            <Route path="success">
+              <Route path=":type" element={<Success />} />
+            </Route>
+          </Route>
+          <Route path="/wallet">
+            <Route path="home" element={<Wallet />} />
+          </Route>
         </Routes>
       </div>
 

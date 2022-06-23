@@ -5,7 +5,7 @@ import BankLogo from '../../assets/bank-logo.svg'
 const BankLoginCard = () => {
   const navigate = useNavigate()
   const handleLoginBank = () => {
-    navigate('/cash-in')
+    navigate('/remit/cash-in')
   }
   return (
     <div
