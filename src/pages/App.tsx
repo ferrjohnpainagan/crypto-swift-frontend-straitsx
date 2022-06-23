@@ -10,18 +10,14 @@ import Exchange from './Exchange'
 import CashOut from './CashOut'
 import Success from './Success'
 import Wallet from './Wallet'
+import Title from 'components/Title'
 
 function App() {
   return (
     <div className="m-0 h-screen w-screen bg-defaultBg p-0">
       <Header />
       <div className="mt-14 flex justify-center">
-        <div
-          style={{ fontSize: '42px' }}
-          className="mt-6 font-poppins font-semibold text-blue1"
-        >
-          Crypto Swift
-        </div>
+        <Title />
         <Routes>
           <Route path="/remit">
             <Route path="bank-login" element={<BankLogin />} />
