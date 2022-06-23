@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Dropdown from 'components/Dropdown'
+import Card from 'components/Card'
 import { CURRENCIES } from 'constants/index'
 
 const CashIn = () => {
@@ -9,15 +10,12 @@ const CashIn = () => {
   const navigate = useNavigate()
 
   const handleCashIn = () => {
-    navigate('/success/cash-in', {
+    navigate('/remit/success/cash-in', {
       state: { amount: amount, currency: currency },
     })
   }
   return (
-    <div
-      style={{ width: '35vw' }}
-      className="mx-32 flex flex-col rounded-xl border border-solid border-cardStroke bg-white"
-    >
+    <Card width={'35vw'}>
       <div className="flex h-16 w-full items-center border-b pl-8">
         <p className="font-workSans text-blue1">Cash-in</p>
       </div>
@@ -75,7 +73,7 @@ const CashIn = () => {
           <div className="text-xs">----</div>
         </div>
       </div>
-    </div>
+    </Card>
   )
 }
 

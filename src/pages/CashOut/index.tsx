@@ -12,7 +12,7 @@ const CashOut = () => {
   const navigate = useNavigate()
 
   const handleCashOut = () => {
-    navigate('/success/cash-out', {
+    navigate('/remit/success/cash-out', {
       state: {
         amount: amount,
         currency: currency,
