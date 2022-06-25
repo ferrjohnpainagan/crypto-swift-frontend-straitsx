@@ -1,12 +1,8 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+
 import BankLogo from '../../assets/bank-logo.svg'
 
-const BankLoginCard = () => {
-  const navigate = useNavigate()
-  const handleLoginBank = () => {
-    navigate('/remit/cash-in')
-  }
+const BankLoginCard = ({ handleLoginBank }) => {
   return (
     <div
       style={{ width: '50vw' }}
