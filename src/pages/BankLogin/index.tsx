@@ -11,8 +11,9 @@ const BankLogin = () => {
   const handleLoginBank = async () => {
     try {
       const result = await linkBankAccount()
-      console.log(result)
-      // navigate('/remit/cash-in')
+      if (result.status == 200) {
+        navigate('/remit/cash-in', { state: result.data.data })
+      }
     } catch (error) {
       console.log(error)
     }

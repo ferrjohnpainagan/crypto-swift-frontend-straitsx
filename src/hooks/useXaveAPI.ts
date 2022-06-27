@@ -10,24 +10,25 @@ export function useXaveAPI(): any {
   const linkBankAccount = useCallback(async () => {
     const request: AxiosRequestConfig = {
       method: 'POST',
-      url: `${REACT_APP_XAVE_API_URL}/${REACT_APP_SERVERLESS_STAGE_URL}/customer_bank_account`,
+      url: `${REACT_APP_XAVE_API_URL}/${REACT_APP_SERVERLESS_STAGE_URL}/create_customer_bank_account`,
       data: {
-        customerName: 'John Ng',
+        customerName: 'Johnn Ng',
         registrationType: 'personal',
-        registrationId: 'S1234567J',
+        registrationId: `S123${Math.floor(1000 + Math.random() * 9000)}J`,
         countryOfResidence: 'singapore',
         dateOfBirth: '1983-11-14',
         nationality: 'SINGAPOREAN',
-        accountHolderName: 'John Ng',
-        accountNumber: '1009244244',
+        accountHolderName: 'Johnn Ng',
+        accountNumber: `100924${Math.floor(1000 + Math.random() * 9000)}`,
         bank: 'CIMB',
         gender: 'MALE',
-        email: 'test@gmail.com',
+        email: 'test1@gmail.com',
         phoneNo: '+6587654321',
       },
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        // accept: '*/*',
+        // 'Content-Type': 'application/json',
+        // 'Access-Control-Allow-Origin': '*',
       },
     }
 
