@@ -42,5 +42,24 @@ export function useXaveAPI(): any {
     }
   }, [])
 
-  return { linkBankAccount }
+  const getCustomerBankAccount = useCallback(
+    async (customerId: string, bankAccountNumber: string) => {
+      const request: AxiosRequestConfig = {
+        method: 'GET',
+        url: `${REACT_APP_XAVE_API_URL}/${REACT_APP_SERVERLESS_STAGE_URL}/get_customer_bank_account/${customerId}/${bankAccountNumber}`,
+      }
+
+      try {
+        const res: AxiosResponse = await axios(request)
+        console.log(res)
+        return res
+      } catch (error) {
+        console.log(error)
+        throw new Error(error)
+      }
+    },
+    [],
+  )
+
+  return { linkBankAccount, getCustomerBankAccount }
 }
