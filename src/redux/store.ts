@@ -1,16 +1,20 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { combineReducers } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
-
 import { createLogger } from 'redux-logger'
 import storage from 'redux-persist/lib/storage'
+
+import accountSlice from './account/slice'
 
 const persistConfig = {
   key: 'root',
   storage,
 }
 
-const rootReducer = () => combineReducers({})
+const rootReducer = () =>
+  combineReducers({
+    account: accountSlice.reducer,
+  })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer())
 

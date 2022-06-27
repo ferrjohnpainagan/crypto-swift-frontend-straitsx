@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { useXaveAPI } from 'hooks/useXaveAPI'
 
 import Dropdown from 'components/Dropdown'
@@ -9,10 +10,16 @@ import { CURRENCIES } from 'constants/index'
 const CashIn = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { isLoggedIn } = useSelector((state: any) => state.account)
   const [amount, setAmount] = useState('0.0')
   const [currency, setCurrency] = useState<any>('')
-  const { bankAccount, customer }: any = location.state
 
+  useEffect(() => {
+    if (isLoggedIn) return
+    navigate('/remit/bank-login')
+  }, [])
+
+  // const { bankAccount, customer }: any = location.state
   const { getCustomerBankAccount } = useXaveAPI()
 
   const handleGetCustomerBankAccount = async () => {
@@ -34,7 +41,6 @@ const CashIn = () => {
   }
 
   useEffect(() => {
-    console.log(location)
     handleGetCustomerBankAccount()
   }, [])
   return (

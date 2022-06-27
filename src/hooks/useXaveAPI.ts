@@ -3,6 +3,8 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 const { REACT_APP_SERVERLESS_STAGE_URL, REACT_APP_XAVE_API_URL } = process.env
 
+const baseUrl = `${REACT_APP_XAVE_API_URL}/${REACT_APP_SERVERLESS_STAGE_URL}`
+
 export function useXaveAPI(): any {
   /**
    * Mock linking of Bank account
@@ -10,7 +12,7 @@ export function useXaveAPI(): any {
   const linkBankAccount = useCallback(async () => {
     const request: AxiosRequestConfig = {
       method: 'POST',
-      url: `${REACT_APP_XAVE_API_URL}/${REACT_APP_SERVERLESS_STAGE_URL}/create_customer_bank_account`,
+      url: `${baseUrl}/create_customer_bank_account`,
       data: {
         customerName: 'Johnn Ng',
         registrationType: 'personal',
@@ -46,12 +48,11 @@ export function useXaveAPI(): any {
     async (customerId: string, bankAccountNumber: string) => {
       const request: AxiosRequestConfig = {
         method: 'GET',
-        url: `${REACT_APP_XAVE_API_URL}/${REACT_APP_SERVERLESS_STAGE_URL}/get_customer_bank_account/${customerId}/${bankAccountNumber}`,
+        url: `${baseUrl}/get_customer_bank_account/${customerId}/${bankAccountNumber}`,
       }
 
       try {
         const res: AxiosResponse = await axios(request)
-        console.log(res)
         return res
       } catch (error) {
         console.log(error)
