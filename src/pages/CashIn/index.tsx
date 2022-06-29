@@ -27,11 +27,11 @@ const CashIn = () => {
     //   customer.data.id,
     //   bankAccount[0].account_no,
     // )
-    const result = await getCustomerBankAccount(
-      'customer_profile_39e7a1f4-5d1c-45e0-b483-f35b1c88b061',
-      '1009248692',
-    )
-    console.log(result)
+    // const result = await getCustomerBankAccount(
+    //   'customer_profile_39e7a1f4-5d1c-45e0-b483-f35b1c88b061',
+    //   '1009248692',
+    // )
+    // console.log(result)
   }
 
   const handleCashIn = () => {

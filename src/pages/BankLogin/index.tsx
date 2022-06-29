@@ -15,15 +15,20 @@ const BankLogin = () => {
 
   const handleLoginBank = async () => {
     setLoading(true)
-    try {
-      const result = await linkBankAccount()
-      if (result.status == 200) {
-        dispatch(authenticateBank(true))
-        navigate('/remit/cash-in', { state: result.data.data })
-      }
-    } catch (error) {
-      console.log(error)
-    }
+
+    setTimeout(() => {
+      dispatch(authenticateBank(true))
+      navigate('/remit/cash-in')
+    }, 1000)
+    // try {
+    //   const result = await linkBankAccount()
+    //   if (result.status == 200) {
+    //     dispatch(authenticateBank(true))
+    //     navigate('/remit/cash-in', { state: result.data.data })
+    //   }
+    // } catch (error) {
+    //   console.log(error)
+    // }
   }
 
   useEffect(() => {
