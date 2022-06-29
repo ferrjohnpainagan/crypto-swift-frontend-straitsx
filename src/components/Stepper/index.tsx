@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import Check from '../../assets/check.svg'
 
@@ -34,8 +34,18 @@ const Stepper = () => {
         return 'inactive'
     }
   }
+
+  const displayStepper = () => {
+    console.log(location.pathname.includes('remit'))
+    return location.pathname.includes('remit')
+  }
+
   return (
-    <div className="mt-10 flex justify-center">
+    <div
+      className={`mt-10 flex justify-center ${
+        !displayStepper() ? 'hidden' : ''
+      }`}
+    >
       <div style={{ width: '50vw' }} className="mx-4 p-4">
         <div className="flex items-center">
           <div className="relative flex items-center">
