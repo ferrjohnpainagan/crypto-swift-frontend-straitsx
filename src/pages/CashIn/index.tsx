@@ -17,7 +17,7 @@ const CashIn = () => {
   const accountNo = localStorage.getItem('accountNo')
   const customerId = localStorage.getItem('customerId')
   const username = localStorage.getItem('username')
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [amount, setAmount] = useState('0.0')
   const [currency, setCurrency] = useState<any>('')
 
