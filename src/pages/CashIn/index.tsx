@@ -37,7 +37,7 @@ const CashIn = () => {
           </div>
           <div className="flex justify-between rounded-lg bg-vanilla1 p-3 align-bottom">
             <div className="flex flex-col">
-              <div className="font-workSans text-xs">BALANCE: 120,420</div>
+              <div className="font-workSans text-xs">BALANCE: 200 SGD </div>
               <input
                 type="text"
                 className="align-end mt-4 flex w-full border-none border-transparent bg-transparent font-roboto text-2xl focus:outline-none"
