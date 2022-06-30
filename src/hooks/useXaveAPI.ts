@@ -26,6 +26,9 @@ export function useXaveAPI(): any {
         gender: 'MALE',
         email: 'test1@gmail.com',
         phoneNo: '+6587654321',
+        currency: 'SGD',
+        username: 'username',
+        password: 'password',
       },
       headers: {
         // accept: '*/*',
@@ -36,8 +39,7 @@ export function useXaveAPI(): any {
 
     try {
       const res: AxiosResponse = await axios(request)
-      console.log(res)
-      return res
+      return { res, username: 'username' }
     } catch (error) {
       console.log(error)
       throw new Error(error)

@@ -10,12 +10,13 @@ import { CURRENCIES } from 'constants/index'
 const CashIn = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { isLoggedIn } = useSelector((state: any) => state.account)
+  // const { isLoggedIn } = useSelector((state: any) => state.account)
+  const isLoggedIn = localStorage.getItem('isLoggedIn')
   const [amount, setAmount] = useState('0.0')
   const [currency, setCurrency] = useState<any>('')
 
   useEffect(() => {
-    if (isLoggedIn) return
+    if (isLoggedIn == 'true') return
     navigate('/remit/bank-login')
   }, [])
 
@@ -27,11 +28,11 @@ const CashIn = () => {
     //   customer.data.id,
     //   bankAccount[0].account_no,
     // )
-    // const result = await getCustomerBankAccount(
-    //   'customer_profile_39e7a1f4-5d1c-45e0-b483-f35b1c88b061',
-    //   '1009248692',
-    // )
-    // console.log(result)
+    const result = await getCustomerBankAccount(
+      'customer_profile_39e7a1f4-5d1c-45e0-b483-f35b1c88b061',
+      '1009248692',
+    )
+    console.log(result)
   }
 
   const handleCashIn = () => {
