@@ -1,12 +1,9 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import BankLogo from '../../assets/bank-logo.svg'
 
-const BankLoginCard = () => {
-  const navigate = useNavigate()
-  const handleLoginBank = () => {
-    navigate('/remit/cash-in')
-  }
+import BankLogo from '../../assets/bank-logo.svg'
+import Loader from 'components/Loader'
+
+const BankLoginCard = ({ handleLoginBank, loading }) => {
   return (
     <div
       style={{ width: '50vw' }}
@@ -19,10 +16,13 @@ const BankLoginCard = () => {
         <button
           type="button"
           style={{ width: '30vw' }}
-          className="mt-12 rounded-lg bg-blue1 py-3 font-workSans text-white hover:bg-blue2"
+          className={`mt-12 flex h-12 justify-center rounded-lg bg-blue1 py-3 font-workSans text-white ${
+            loading ? 'opacity-50' : 'hover:bg-blue2'
+          }`}
+          disabled={loading}
           onClick={handleLoginBank}
         >
-          Login To Bank
+          {loading ? <Loader /> : 'Login To Bank'}
         </button>
       </div>
       <div className="mt-8 text-center font-workSans text-sm">
