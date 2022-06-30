@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { CashInInterface } from 'interfaces'
 
 const { REACT_APP_SERVERLESS_STAGE_URL, REACT_APP_XAVE_API_URL } = process.env
 
@@ -64,5 +65,21 @@ export function useXaveAPI(): any {
     [],
   )
 
-  return { linkBankAccount, getCustomerBankAccount }
+  const processCashIn = useCallback(async (data: CashInInterface) => {
+    const request: AxiosRequestConfig = {
+      method: 'POST',
+      url: `${baseUrl}/cash_in`,
+      data,
+    }
+
+    try {
+      const res: AxiosResponse = await axios(request)
+      return res
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }, [])
+
+  return { linkBankAccount, getCustomerBankAccount, processCashIn }
 }
