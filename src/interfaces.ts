@@ -16,3 +16,10 @@ export interface BankAccountInterface {
   verification_status: string
   verified: boolean
 }
+
+export interface CashInInterface {
+  username: string
+  customerId: string
+  bankAccountNumber: string
+  amount: string
+}

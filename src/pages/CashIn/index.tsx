@@ -6,12 +6,18 @@ import { useXaveAPI } from 'hooks/useXaveAPI'
 import Dropdown from 'components/Dropdown'
 import Card from 'components/Card'
 import { CURRENCIES } from 'constants/index'
+import Loader from 'components/Loader'
+import { sample } from 'lodash'
 
 const CashIn = () => {
   const navigate = useNavigate()
   const location = useLocation()
   // const { isLoggedIn } = useSelector((state: any) => state.account)
   const isLoggedIn = localStorage.getItem('isLoggedIn')
+  const accountNo = localStorage.getItem('accountNo')
+  const customerId = localStorage.getItem('customerId')
+  const username = localStorage.getItem('username')
+  const [loading, setLoading] = useState(true)
   const [amount, setAmount] = useState('0.0')
   const [currency, setCurrency] = useState<any>('')
 
@@ -20,30 +26,30 @@ const CashIn = () => {
     navigate('/remit/bank-login')
   }, [])
 
-  // const { bankAccount, customer }: any = location.state
-  const { getCustomerBankAccount } = useXaveAPI()
+  const { processCashIn } = useXaveAPI()
 
-  const handleGetCustomerBankAccount = async () => {
-    // const result = await getCustomerBankAccount(
-    //   customer.data.id,
-    //   bankAccount[0].account_no,
-    // )
-    const result = await getCustomerBankAccount(
-      'customer_profile_39e7a1f4-5d1c-45e0-b483-f35b1c88b061',
-      '1009248692',
-    )
-    console.log(result)
+  const handleCashIn = async () => {
+    setLoading(true)
+    try {
+      const response = await processCashIn({
+        username: username,
+        customerId: customerId,
+        bankAccountNumber: accountNo,
+        amount: amount,
+      })
+
+      if (response.status === 200) {
+        navigate('/remit/success/cash-in', {
+          state: { amount: amount, currency: currency },
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      setLoading(false)
+    }
   }
 
-  const handleCashIn = () => {
-    navigate('/remit/success/cash-in', {
-      state: { amount: amount, currency: currency },
-    })
-  }
-
-  useEffect(() => {
-    handleGetCustomerBankAccount()
-  }, [])
+  useEffect(() => {}, [])
   return (
     <Card width={'35vw'}>
       <div className="flex h-16 w-full items-center border-b pl-8">
@@ -81,7 +87,7 @@ const CashIn = () => {
           </div>
           <button
             type="button"
-            className={`mt-6 w-full rounded-lg ${
+            className={`mt-6 flex h-12 w-full justify-center rounded-lg ${
               parseFloat(amount) > 0 && currency !== ''
                 ? 'bg-blue1 hover:bg-blue2'
                 : 'bg-gray1'
@@ -89,7 +95,7 @@ const CashIn = () => {
             disabled={!(parseFloat(amount) > 0 && currency !== '')}
             onClick={handleCashIn}
           >
-            Cash-in
+            {loading ? <Loader /> : 'Cash-in'}
           </button>
         </div>
       </div>
