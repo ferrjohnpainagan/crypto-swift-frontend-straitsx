@@ -10,6 +10,7 @@ import Exchange from './Exchange'
 import CashOut from './CashOut'
 import Success from './Success'
 import Wallet from './Wallet'
+import BankRecipient from './BankRecipient'
 import Title from 'components/Title'
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path="/remit">
               <Route path="bank-login" element={<BankLogin />} />
               <Route path="cash-in" element={<CashIn />} />
+              <Route path="bank-recipient" element={<BankRecipient />} />
               <Route path="exchange" element={<Exchange />} />
               <Route path="cash-out" element={<CashOut />} />
               <Route path="success">
