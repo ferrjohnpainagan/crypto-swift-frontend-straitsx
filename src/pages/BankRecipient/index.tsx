@@ -1,10 +1,24 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import NumberFormat from 'react-number-format'
 import BankLogo from 'assets/bank-logo-2.svg'
 import Loader from 'components/Loader'
 
 const BankRecipient = () => {
   const [loading, setLoading] = useState(false)
-  const handleBankRecipient = () => {}
+  const [accountName, setAccountName] = useState('')
+  const [accountNumber, setAccountNumber] = useState('')
+  const [swiftCode, setSwiftCode] = useState('')
+  const navigate = useNavigate()
+
+  const handleBankRecipient = () => {
+    setLoading(true)
+    localStorage.setItem('bankAccountRecipient', accountNumber)
+
+    setTimeout(() => {
+      navigate('/remit/exchange')
+    }, 1500)
+  }
   return (
     <div
       style={{ width: '50vw' }}
@@ -21,13 +35,19 @@ const BankRecipient = () => {
             <input
               type="text"
               className="mt-1 rounded-lg border border-black p-2 text-sm text-gray1 outline-none"
+              value={accountName}
+              onChange={(e) => setAccountName(e.target.value)}
             />
           </div>
           <div className="mt-1">
             <div className="font-workSans text-sm">Account Number</div>
-            <input
-              type="text"
+            <NumberFormat
               className="mt-1 rounded-lg border border-black p-2 text-sm text-gray1 outline-none"
+              value={accountNumber}
+              format="###-###-####"
+              onValueChange={(input) => {
+                setAccountNumber(input.value)
+              }}
             />
           </div>
           <div className="mt-1">
@@ -35,6 +55,8 @@ const BankRecipient = () => {
             <input
               type="password"
               className="mt-1 rounded-lg border border-black p-2 text-sm text-gray1 outline-none"
+              value={swiftCode}
+              onChange={(e) => setSwiftCode(e.target.value)}
             />
           </div>
         </div>
