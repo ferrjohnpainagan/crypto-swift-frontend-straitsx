@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ethers } from 'ethers'
+import NumberFormat from 'react-number-format';
 import { useCurrencyAPI } from 'hooks/useCurrencyAPI'
+import { useXaveAPI } from 'hooks/useXaveAPI'
 import Card from 'components/Card'
 import CurrencyDropdown from './CurrencyDropdown'
 import { CURRENCIES } from 'constants/index'
@@ -19,17 +22,29 @@ const Exchange = () => {
   const navigate = useNavigate()
 
   const { getExchangeRate } = useCurrencyAPI()
+  const { processExchange } = useXaveAPI()
 
   const handleExchange = async () => {
-    // navigate('/remit/success/exchange', {
-    //   state: {
-    //     sell: `${sellAmount} ${sell.currency}`,
-    //     buy: `${buyAmount} ${buy.currency}`,
-    //   },
-    // })
-    setTimeout(() => {
-      setStatus('success')
-    }, 1000)
+    const amountToWei = ethers.utils.parseUnits(sellAmount, 6)
+    const amount = ethers.utils.formatUnits(amountToWei, 'wei')
+    try {
+      const response = await processExchange(Number(amount))
+
+      if (response.status === 200) {
+        setStatus('success')
+        setTimeout(() => {
+          navigate('/remit/success/exchange', {
+            state: {
+              sell: `${sellAmount} ${sell.currency}`,
+              buy: `${buyAmount} ${buy.currency}`,
+            },
+          })
+        }, 1000)
+      }
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleInputChange = (type: string, input: string) => {
@@ -46,6 +61,10 @@ const Exchange = () => {
       setBuyAmount(calculatedAmount)
     } else {
       setBuyAmount(input)
+      /**
+       * Rate is calculated differently when the buy input is being changed
+       * to correctly handle conversion
+       */
       rate = calcExchangeRate(buy.currency, sell.currency)
       calculatedAmount =
         parseFloat(input) * parseFloat(rate)
@@ -75,14 +94,23 @@ const Exchange = () => {
               />
             </div>
             <div>
-              <input
+            <NumberFormat
+            className="h-16 w-full rounded-xl bg-vanilla1 px-3 text-center text-xl"
+            value={sellAmount}
+            thousandSeparator={true}
+            suffix={` ${sell.currency}`}
+            onValueChange={(input) => {
+              handleInputChange('sell', input.value)
+            }}
+          />
+              {/* <input
                 type="text"
                 className="h-16 w-full rounded-xl bg-vanilla1 px-3 text-center text-xl"
                 value={sellAmount}
                 onChange={(e) => {
                   handleInputChange('sell', e.target.value)
                 }}
-              />
+              /> */}
             </div>
           </div>
 
@@ -99,14 +127,23 @@ const Exchange = () => {
               />
             </div>
             <div>
-              <input
+            <NumberFormat
+            className="h-16 w-full rounded-xl bg-vanilla1 px-3 text-center text-xl"
+            value={buyAmount}
+            thousandSeparator={true}
+            suffix={` ${buy.currency}`}
+            onValueChange={(input) => {
+              handleInputChange('buy', input.value)
+            }}
+          />
+              {/* <input
                 type="text"
                 className="h-16 w-full rounded-xl bg-vanilla1 px-3 text-center text-xl"
                 value={buyAmount}
                 onChange={(e) => {
                   handleInputChange('buy', e.target.value)
                 }}
-              />
+              /> */}
             </div>
           </div>
         </div>

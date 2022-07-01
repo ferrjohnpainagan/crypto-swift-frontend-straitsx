@@ -81,5 +81,35 @@ export function useXaveAPI(): any {
     }
   }, [])
 
-  return { linkBankAccount, getCustomerBankAccount, processCashIn }
+  const processExchange = useCallback(async (amount: string) => {
+    const request: AxiosRequestConfig = {
+      method: 'POST',
+      url: `https://qp83yt9g1f.execute-api.us-east-1.amazonaws.com/test/demo/stablecoin_swap`,
+      data: {
+        originSwapDto: {
+          quoteCurrency: '0x7b8FBF2113f23cb6c3982e6e0f8A63590ABC3d7a',
+          originToken: '0x0Ef8760Da2236f657A835d1D69AE335Ee411fa05',
+          targetToken: '0xEe13c38351d2e064C0E92daaf82baB5bCee49543',
+          originAmount: amount,
+          minTargetAmount: 0,
+          swapDeadline: 9999999999,
+        },
+      },
+    }
+
+    try {
+      const res: AxiosResponse = await axios(request)
+      return res
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }, [])
+
+  return {
+    linkBankAccount,
+    getCustomerBankAccount,
+    processCashIn,
+    processExchange,
+  }
 }
