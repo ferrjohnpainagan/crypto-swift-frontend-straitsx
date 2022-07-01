@@ -15,6 +15,9 @@ const Success = () => {
 
   const handleNext = (type: string) => {
     switch (type) {
+      case 'bank-recipient':
+        navigate('/remit/bank-recipient')
+        break
       case 'exchange':
         navigate('/remit/exchange')
         break
