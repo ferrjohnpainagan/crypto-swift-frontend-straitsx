@@ -1,26 +1,58 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useCurrencyAPI } from 'hooks/useCurrencyAPI'
 import Card from 'components/Card'
 import CurrencyDropdown from './CurrencyDropdown'
 import { CURRENCIES } from 'constants/index'
 import CurrentExchangeIcons from './CurrentExchangeIcons'
 import ExchangeIcon from '../../assets/exchange.svg'
+import Status from 'components/Status'
+import { calcExchangeRate } from 'utils/exchangeRate'
 
 const Exchange = () => {
   const [sell, setSell] = useState({ currency: 'SGD' })
   const [buy, setBuy] = useState({ currency: 'IDR' })
   const [sellAmount, setSellAmount] = useState('')
   const [buyAmount, setBuyAmount] = useState('')
-  const [status, setStatus] = useState()
+  const [status, setStatus] = useState('pending')
+  const [exchangeRate, setExchangeRate] = useState('----')
   const navigate = useNavigate()
 
-  const handleExchange = () => {
-    navigate('/remit/success/exchange', {
-      state: {
-        sell: `${sellAmount} ${sell.currency}`,
-        buy: `${buyAmount} ${buy.currency}`,
-      },
-    })
+  const { getExchangeRate } = useCurrencyAPI()
+
+  const handleExchange = async () => {
+    // navigate('/remit/success/exchange', {
+    //   state: {
+    //     sell: `${sellAmount} ${sell.currency}`,
+    //     buy: `${buyAmount} ${buy.currency}`,
+    //   },
+    // })
+    setTimeout(() => {
+      setStatus('success')
+    }, 1000)
+  }
+
+  const handleInputChange = (type: string, input: string) => {
+    let calculatedAmount
+    let rate
+    rate = calcExchangeRate(sell.currency, buy.currency).toString()
+    setExchangeRate(rate)
+    if (type === 'sell') {
+      setSellAmount(input)
+      calculatedAmount =
+        parseFloat(input) * parseFloat(rate)
+          ? (parseFloat(input) * parseFloat(rate)).toString()
+          : ''
+      setBuyAmount(calculatedAmount)
+    } else {
+      setBuyAmount(input)
+      rate = calcExchangeRate(buy.currency, sell.currency)
+      calculatedAmount =
+        parseFloat(input) * parseFloat(rate)
+          ? (parseFloat(input) * parseFloat(rate)).toString()
+          : ''
+      setSellAmount(calculatedAmount)
+    }
   }
 
   return (
@@ -47,7 +79,9 @@ const Exchange = () => {
                 type="text"
                 className="h-16 w-full rounded-xl bg-vanilla1 px-3 text-center text-xl"
                 value={sellAmount}
-                onChange={(e) => setSellAmount(e.target.value)}
+                onChange={(e) => {
+                  handleInputChange('sell', e.target.value)
+                }}
               />
             </div>
           </div>
@@ -69,7 +103,9 @@ const Exchange = () => {
                 type="text"
                 className="h-16 w-full rounded-xl bg-vanilla1 px-3 text-center text-xl"
                 value={buyAmount}
-                onChange={(e) => setBuyAmount(e.target.value)}
+                onChange={(e) => {
+                  handleInputChange('buy', e.target.value)
+                }}
               />
             </div>
           </div>
@@ -89,11 +125,13 @@ const Exchange = () => {
         <div className="font-workSans text-black1">
           <div className="flex justify-between">
             <div className="text-xs">Exchange Rate</div>
-            <div className="text-xs font-bold">1 SGD = 10615.81 IDR</div>
+            <div className="text-xs font-bold">
+              1 {sell.currency} = {exchangeRate} {buy.currency}
+            </div>
           </div>
           <div className="flex justify-between pt-2 pb-6">
-            <div className="text-xs">Minimum Received</div>
-            <div className="text-xs">----</div>
+            <div className="text-xs">Status</div>
+            <Status status={status} />
           </div>
         </div>
       </div>
