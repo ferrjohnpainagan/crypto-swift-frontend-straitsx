@@ -7,7 +7,7 @@ import Dropdown from 'components/Dropdown'
 import Card from 'components/Card'
 import { CURRENCIES } from 'constants/index'
 import Loader from 'components/Loader'
-import { sample } from 'lodash'
+import Status from 'components/Status'
 
 const CashIn = () => {
   const navigate = useNavigate()
@@ -20,6 +20,7 @@ const CashIn = () => {
   const [loading, setLoading] = useState(false)
   const [amount, setAmount] = useState('0.0')
   const [currency, setCurrency] = useState<any>('')
+  const [status, setStatus] = useState('pending')
 
   useEffect(() => {
     if (isLoggedIn == 'true') return
@@ -39,9 +40,12 @@ const CashIn = () => {
       })
 
       if (response.status === 200) {
-        navigate('/remit/success/cash-in', {
-          state: { amount: amount, currency: currency },
-        })
+        setStatus('success')
+        setTimeout(() => {
+          navigate('/remit/success/cash-in', {
+            state: { amount: amount, currency: currency },
+          })
+        }, 1500)
       }
     } catch (error) {
       console.log(error)
@@ -88,11 +92,11 @@ const CashIn = () => {
           <button
             type="button"
             className={`mt-6 flex h-12 w-full justify-center rounded-lg ${
-              parseFloat(amount) > 0 && currency !== ''
+              (parseFloat(amount) > 0 && currency !== '') || loading
                 ? 'bg-blue1 hover:bg-blue2'
                 : 'bg-gray1'
             }  py-3 font-workSans font-medium text-white`}
-            disabled={!(parseFloat(amount) > 0 && currency !== '')}
+            disabled={!(parseFloat(amount) > 0 && currency !== '') || loading}
             onClick={handleCashIn}
           >
             {loading ? <Loader /> : 'Cash-in'}
@@ -102,11 +106,13 @@ const CashIn = () => {
       <div className="px-8 font-workSans text-black1">
         <div className="flex justify-between">
           <div className="text-xs">Deposited amount</div>
-          <div className="text-xs">----</div>
+          <div className="text-xs font-semibold">
+            {status === 'success' ? `${amount} ${currency.currency}` : '----'}
+          </div>
         </div>
         <div className="flex justify-between pt-2 pb-6">
           <div className="text-xs">Status</div>
-          <div className="text-xs">----</div>
+          <Status status={status} />
         </div>
       </div>
     </Card>
