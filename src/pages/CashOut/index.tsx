@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import NumberFormat from 'react-number-format'
 import Card from 'components/Card'
 import Dropdown from 'components/Dropdown'
 import { CURRENCIES } from 'constants/index'
@@ -8,7 +9,7 @@ const CashOut = () => {
   const [amount, setAmount] = useState('0.0')
   const [cashOutAmount, setCashOutAmount] = useState<any>('')
   const [cashOutCurrency, setCashOutCurrency] = useState('PHP')
-  const [currency, setCurrency] = useState<any>('')
+  const [currency, setCurrency] = useState<any>(CURRENCIES[0])
   const navigate = useNavigate()
 
   const handleCashOut = () => {
@@ -56,13 +57,20 @@ const CashOut = () => {
                 MAX
               </button>
             </div> */}
-            <input
+            {/* <input
               type="text"
               className="align-end flex w-full border-none border-transparent bg-transparent font-roboto text-2xl focus:outline-none"
               value={amount}
               onChange={(e) => {
                 setAmount(e.target.value)
-                setCashOutAmount(parseFloat(e.target.value) * 38.44)
+              }}
+            /> */}
+            <NumberFormat
+              className="align-end flex w-full border-none border-transparent bg-transparent font-roboto text-2xl focus:outline-none"
+              value={amount}
+              thousandSeparator={true}
+              onValueChange={(input) => {
+                setAmount(input.value)
               }}
             />
           </div>
