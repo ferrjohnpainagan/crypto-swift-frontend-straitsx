@@ -23,3 +23,10 @@ export interface CashInInterface {
   bankAccountNumber: string
   amount: string
 }
+
+export interface CashOutInterface {
+  username: string
+  customerId: string
+  bankAccountNumber: string
+  amount: string
+}

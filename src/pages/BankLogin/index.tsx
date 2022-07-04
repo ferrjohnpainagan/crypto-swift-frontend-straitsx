@@ -27,7 +27,7 @@ const BankLogin = () => {
           response.res.data.data.bankAccount.account_holder_name,
         )
         localStorage.setItem(
-          'accountNo',
+          'accountNumber',
           response.res.data.data.bankAccount.account_no,
         )
         localStorage.setItem(

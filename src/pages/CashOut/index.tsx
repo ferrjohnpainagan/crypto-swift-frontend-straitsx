@@ -1,25 +1,55 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import NumberFormat from 'react-number-format'
+import { useXaveAPI } from 'hooks/useXaveAPI'
 import Card from 'components/Card'
 import Dropdown from 'components/Dropdown'
+import Loader from 'components/Loader'
+import Status from 'components/Status'
 import { CURRENCIES } from 'constants/index'
 
 const CashOut = () => {
+  const navigate = useNavigate()
+  const username = localStorage.getItem('username')
+  const customerId = localStorage.getItem('customerId')
+  const accountNumber = localStorage.getItem('accountNumber')
   const [amount, setAmount] = useState('0.0')
   const [cashOutAmount, setCashOutAmount] = useState<any>('')
   const [cashOutCurrency, setCashOutCurrency] = useState('PHP')
-  const [currency, setCurrency] = useState<any>('')
-  const navigate = useNavigate()
+  const [currency, setCurrency] = useState<any>(CURRENCIES[0])
+  const [loading, setLoading] = useState(false)
+  const [status, setStatus] = useState('pending')
 
-  const handleCashOut = () => {
-    navigate('/remit/success/cash-out', {
-      state: {
+  const { processCashOut } = useXaveAPI()
+
+  const handleCashOut = async () => {
+    setLoading(true)
+
+    try {
+      const response = await processCashOut({
+        username: username,
+        customerId: customerId,
+        bankAccountNumber: accountNumber,
         amount: amount,
-        currency: currency,
-        cashOutAmount: cashOutAmount,
-        cashOutCurrency: cashOutCurrency,
-      },
-    })
+      })
+      console.log(response)
+      if (response.status === 200) {
+        setStatus('success')
+
+        setTimeout(() => {
+          navigate('/remit/success/cash-out', {
+            state: {
+              amount: amount,
+              currency: currency,
+              cashOutAmount: cashOutAmount,
+              cashOutCurrency: cashOutCurrency,
+            },
+          })
+        }, 1500)
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -56,27 +86,34 @@ const CashOut = () => {
                 MAX
               </button>
             </div> */}
-            <input
+            {/* <input
               type="text"
               className="align-end flex w-full border-none border-transparent bg-transparent font-roboto text-2xl focus:outline-none"
               value={amount}
               onChange={(e) => {
                 setAmount(e.target.value)
-                setCashOutAmount(parseFloat(e.target.value) * 38.44)
+              }}
+            /> */}
+            <NumberFormat
+              className="align-end flex w-full border-none border-transparent bg-transparent font-roboto text-2xl focus:outline-none"
+              value={amount}
+              thousandSeparator={true}
+              onValueChange={(input) => {
+                setAmount(input.value)
               }}
             />
           </div>
           <button
             type="button"
-            className={`mt-6 w-full rounded-lg ${
-              parseFloat(amount) > 0 && currency !== ''
-                ? 'bg-blue1 hover:bg-blue2'
-                : 'bg-gray1'
+            className={`mt-6 flex w-full justify-center rounded-lg  ${
+              !(parseFloat(amount) > 0 && currency !== '') || loading
+                ? 'bg-gray1 opacity-50'
+                : 'bg-blue1 hover:bg-blue2'
             }  py-3 font-workSans font-medium text-white`}
-            disabled={!(parseFloat(amount) > 0 && currency !== '')}
+            disabled={!(parseFloat(amount) > 0 && currency !== '') || loading}
             onClick={handleCashOut}
           >
-            Cash-out
+            {loading ? <Loader /> : 'Cash-out'}
           </button>
         </div>
       </div>
@@ -87,7 +124,7 @@ const CashOut = () => {
         </div>
         <div className="flex justify-between pt-2 pb-6">
           <div className="text-xs">Status</div>
-          <div className="text-xs">----</div>
+          <Status status={status} />
         </div>
       </div>
     </Card>

@@ -14,7 +14,7 @@ const CashIn = () => {
   const location = useLocation()
   // const { isLoggedIn } = useSelector((state: any) => state.account)
   const isLoggedIn = localStorage.getItem('isLoggedIn')
-  const accountNo = localStorage.getItem('accountNo')
+  const accountNumber = localStorage.getItem('accountNumber')
   const customerId = localStorage.getItem('customerId')
   const username = localStorage.getItem('username')
   const [loading, setLoading] = useState(false)
@@ -35,7 +35,7 @@ const CashIn = () => {
       const response = await processCashIn({
         username: username,
         customerId: customerId,
-        bankAccountNumber: accountNo,
+        bankAccountNumber: accountNumber,
         amount: amount,
       })
 
