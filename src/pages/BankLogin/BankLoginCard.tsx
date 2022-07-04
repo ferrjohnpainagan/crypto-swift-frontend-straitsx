@@ -10,7 +10,7 @@ const BankLoginCard = () => {
     // navigate('/cash-in')
   }
   const { open, ready } = usePlaidLink({
-  token: 'link-sandbox-6095c605-47ab-498f-862f-a712a75bbf79',
+  token: 'link-sandbox-eca24d97-6c51-4142-81e7-fbba24f05b81',
   onSuccess: (public_token, metadata) => {
     // send public_token to server
     navigate('/cash-in')
