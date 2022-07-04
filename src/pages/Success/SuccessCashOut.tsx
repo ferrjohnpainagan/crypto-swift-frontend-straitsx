@@ -4,6 +4,7 @@ import ArrowRight from '../../assets/arrow-right.svg'
 import SuccessCashOutIcon from '../../assets/success-cash-out.svg'
 const SuccessCashOut = (props) => {
   const { amount, currency, cashOutAmount, cashOutCurrency } = props.state
+  console.log(props.state)
   return (
     <Card width={'30vw'}>
       <div className="flex flex-col items-center py-4 px-10">

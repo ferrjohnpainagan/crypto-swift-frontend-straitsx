@@ -7,6 +7,7 @@ import Dropdown from 'components/Dropdown'
 import Loader from 'components/Loader'
 import Status from 'components/Status'
 import { CURRENCIES } from 'constants/index'
+import { calcExchangeRate } from 'utils/exchangeRate'
 
 const CashOut = () => {
   const navigate = useNavigate()
@@ -14,16 +15,20 @@ const CashOut = () => {
   const customerId = localStorage.getItem('customerId')
   const accountNumber = localStorage.getItem('accountNumber')
   const [amount, setAmount] = useState('0.0')
-  const [cashOutAmount, setCashOutAmount] = useState<any>('')
-  const [cashOutCurrency, setCashOutCurrency] = useState('PHP')
+  const [cashOutAmount, setCashOutAmount] = useState<any>()
+  const [cashOutCurrency, setCashOutCurrency] = useState('IDR')
   const [currency, setCurrency] = useState<any>(CURRENCIES[0])
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState('pending')
+  const [exchangeRate, setExchangeRate] = useState(
+    calcExchangeRate('SGD', 'IDR'),
+  )
 
   const { processCashOut } = useXaveAPI()
 
   const handleCashOut = async () => {
     setLoading(true)
+    const rate = exchangeRate
 
     try {
       const response = await processCashOut({
@@ -35,13 +40,13 @@ const CashOut = () => {
       console.log(response)
       if (response.status === 200) {
         setStatus('success')
-
+        console.log(cashOutAmount)
         setTimeout(() => {
           navigate('/remit/success/cash-out', {
             state: {
               amount: amount,
               currency: currency,
-              cashOutAmount: cashOutAmount,
+              cashOutAmount: Number(amount) * Number(rate),
               cashOutCurrency: cashOutCurrency,
             },
           })
@@ -120,7 +125,7 @@ const CashOut = () => {
       <div className="px-8 font-workSans text-black1">
         <div className="flex justify-between">
           <div className="text-xs">Exchange Rate</div>
-          <div className="text-xs font-bold">38.40 SGD/PHP</div>
+          <div className="text-xs font-bold">1 SGD = {exchangeRate} IDR</div>
         </div>
         <div className="flex justify-between pt-2 pb-6">
           <div className="text-xs">Status</div>
