@@ -46,7 +46,7 @@ const CashOut = () => {
             state: {
               amount: amount,
               currency: currency,
-              cashOutAmount: Number(amount) * Number(rate),
+              cashOutAmount: Number(amount),
               cashOutCurrency: cashOutCurrency,
             },
           })
@@ -123,10 +123,10 @@ const CashOut = () => {
         </div>
       </div>
       <div className="px-8 font-workSans text-black1">
-        <div className="flex justify-between">
+        {/* <div className="flex justify-between">
           <div className="text-xs">Exchange Rate</div>
           <div className="text-xs font-bold">1 SGD = {exchangeRate} IDR</div>
-        </div>
+        </div> */}
         <div className="flex justify-between pt-2 pb-6">
           <div className="text-xs">Status</div>
           <Status status={status} />
