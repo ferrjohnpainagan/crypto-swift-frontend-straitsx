@@ -14,9 +14,7 @@ const BankLogin = () => {
 
   const handleLoginBank = async () => {
     setLoading(true)
-    // setTimeout(() => {
-    //   navigate('/remit/cash-in')
-    // }, 1000)
+
     try {
       const response = await linkBankAccount()
       console.log(response)

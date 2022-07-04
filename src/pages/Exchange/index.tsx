@@ -19,7 +19,9 @@ const Exchange = () => {
   const [sellAmount, setSellAmount] = useState('')
   const [buyAmount, setBuyAmount] = useState('')
   const [status, setStatus] = useState('pending')
-  const [exchangeRate, setExchangeRate] = useState('----')
+  const [exchangeRate, setExchangeRate] = useState(
+    calcExchangeRate('SGD', 'IDR'),
+  )
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
