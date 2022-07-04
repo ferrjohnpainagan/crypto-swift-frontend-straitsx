@@ -33,9 +33,9 @@ const SuccessCashOut = (props) => {
             </a>
           </div>
         </div>
-        <div className="py-1 font-workSans text-blue1 underline hover:cursor-pointer">
+        {/* <div className="py-1 font-workSans text-blue1 underline hover:cursor-pointer">
           View on Explorer
-        </div>
+        </div> */}
       </div>
     </Card>
   )
