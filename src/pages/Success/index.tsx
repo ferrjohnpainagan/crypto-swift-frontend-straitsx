@@ -15,11 +15,14 @@ const Success = () => {
 
   const handleNext = (type: string) => {
     switch (type) {
+      case 'bank-recipient':
+        navigate('/remit/bank-recipient')
+        break
       case 'exchange':
-        navigate('/exchange')
+        navigate('/remit/exchange')
         break
       case 'cash-out':
-        navigate('/cash-out')
+        navigate('/remit/cash-out')
         break
       default:
         break
@@ -30,7 +33,7 @@ const Success = () => {
     if (isSuccessPage && isPathStateNotEmpty) {
       return
     }
-    navigate('/bank-login')
+    navigate('/remit/bank-login')
   }, [])
 
   switch (true) {

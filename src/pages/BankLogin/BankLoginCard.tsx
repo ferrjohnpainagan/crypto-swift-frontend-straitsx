@@ -1,21 +1,14 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import BankLogo from '../../assets/bank-logo.svg'
+import Loader from 'components/Loader'
 
 import { usePlaidLink } from 'react-plaid-link';
 
-const BankLoginCard = () => {
-  const navigate = useNavigate()
-  const handleLoginBank = () => {
-    // navigate('/cash-in')
-  }
-  const { open, ready } = usePlaidLink({
-  token: 'link-sandbox-eca24d97-6c51-4142-81e7-fbba24f05b81',
-  onSuccess: (public_token, metadata) => {
-    // send public_token to server
-    navigate('/cash-in')
-    },
-  });
+const BankLoginCard = ({ handleLoginBank, loading }) => {
+  const { open } = usePlaidLink({
+  token: 'link-sandbox-de2cbcc4-ac09-42c9-b75e-f69b8fb788b5', // mocked for now
+  onSuccess: handleLoginBank});
 
   return (
     <div
@@ -30,11 +23,10 @@ const BankLoginCard = () => {
           type="button"
           style={{ width: '30vw' }}
           className="mt-12 rounded-lg bg-blue1 py-3 font-workSans text-white hover:bg-blue2"
-          // onClick={handleLoginBank}
           onClick={() => open()}
-          disabled={!ready}
+          disabled={loading}
         >
-          Login To Bank
+          {loading ? <Loader /> : 'Login To Bank'}
         </button>
       </div>
       <div className="mt-8 text-center font-workSans text-sm">

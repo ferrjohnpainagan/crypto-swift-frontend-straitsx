@@ -4,7 +4,7 @@ import Arrow from '../../assets/arrow.svg'
 import SuccessExchangeIcon from '../../assets/success-exchange.svg'
 
 const SuccessExchange = (props) => {
-  const { sell, buy } = props.state
+  const { sell, buy, txHash } = props.state
   const { nextBtn } = props
 
   return (
@@ -19,7 +19,12 @@ const SuccessExchange = (props) => {
         <div className="py-1 font-workSans text-sm">
           Exchanged exactly {sell} for {buy}
         </div>
-        <div className="py-1 font-workSans text-blue1 underline hover:cursor-pointer">
+        <div
+          className="py-1 font-workSans text-blue1 underline hover:cursor-pointer"
+          onClick={() => {
+            window.open(txHash)
+          }}
+        >
           View on Explorer
         </div>
         <div className="py-2">
