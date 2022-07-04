@@ -1,9 +1,15 @@
 import React from 'react'
-
+import { useNavigate } from 'react-router-dom'
 import BankLogo from '../../assets/bank-logo.svg'
 import Loader from 'components/Loader'
 
+import { usePlaidLink } from 'react-plaid-link';
+
 const BankLoginCard = ({ handleLoginBank, loading }) => {
+  const { open } = usePlaidLink({
+  token: 'link-sandbox-de2cbcc4-ac09-42c9-b75e-f69b8fb788b5', // mocked for now
+  onSuccess: handleLoginBank});
+
   return (
     <div
       style={{ width: '50vw' }}
@@ -16,11 +22,9 @@ const BankLoginCard = ({ handleLoginBank, loading }) => {
         <button
           type="button"
           style={{ width: '30vw' }}
-          className={`mt-12 flex h-12 justify-center rounded-lg bg-blue1 py-3 font-workSans text-white ${
-            loading ? 'opacity-50' : 'hover:bg-blue2'
-          }`}
+          className="mt-12 rounded-lg bg-blue1 py-3 font-workSans text-white hover:bg-blue2"
+          onClick={() => open()}
           disabled={loading}
-          onClick={handleLoginBank}
         >
           {loading ? <Loader /> : 'Login To Bank'}
         </button>

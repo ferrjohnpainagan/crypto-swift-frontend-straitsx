@@ -36,6 +36,7 @@ const BankLogin = () => {
         )
         localStorage.setItem('username', response.username)
         navigate('/remit/cash-in')
+        setLoading(false)
       }
     } catch (error) {
       setLoading(false)
