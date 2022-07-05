@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ethers } from 'ethers'
 import NumberFormat from 'react-number-format'
@@ -14,13 +14,13 @@ import Loader from 'components/Loader'
 import { calcExchangeRate } from 'utils/exchangeRate'
 
 const Exchange = () => {
-  const [sell, setSell] = useState({ currency: 'SGD' })
-  const [buy, setBuy] = useState({ currency: 'IDR' })
+  const [sell, setSell] = useState({ stableCoin: 'xSGD' })
+  const [buy, setBuy] = useState({ stableCoin: 'xIDR' })
   const [sellAmount, setSellAmount] = useState('')
   const [buyAmount, setBuyAmount] = useState('')
   const [status, setStatus] = useState('pending')
   const [exchangeRate, setExchangeRate] = useState(
-    calcExchangeRate('SGD', 'IDR'),
+    calcExchangeRate('xSGD', 'xIDR'),
   )
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -41,8 +41,8 @@ const Exchange = () => {
         setTimeout(() => {
           navigate('/remit/success/exchange', {
             state: {
-              sell: `${sellAmount} ${sell.currency}`,
-              buy: `${buyAmount} ${buy.currency}`,
+              sell: `${sellAmount} ${sell.stableCoin}`,
+              buy: `${buyAmount} ${buy.stableCoin}`,
               txHash: txHash,
             },
           })
@@ -58,7 +58,9 @@ const Exchange = () => {
   const handleInputChange = (type: string, input: string) => {
     let calculatedAmount
     let rate
-    rate = calcExchangeRate(sell.currency, buy.currency).toString()
+    console.log(type)
+    rate = calcExchangeRate(sell.stableCoin, buy.stableCoin).toString()
+
     setExchangeRate(rate)
     if (type === 'sell') {
       setSellAmount(input)
@@ -73,7 +75,7 @@ const Exchange = () => {
        * Rate is calculated differently when the buy input is being changed
        * to correctly handle conversion
        */
-      rate = calcExchangeRate(buy.currency, sell.currency)
+      rate = calcExchangeRate(buy.stableCoin, sell.stableCoin)
       calculatedAmount =
         parseFloat(input) * parseFloat(rate)
           ? (parseFloat(input) * parseFloat(rate)).toString()
@@ -81,6 +83,8 @@ const Exchange = () => {
       setSellAmount(calculatedAmount)
     }
   }
+
+  const handleCurrencyChange = (type: string, input: any) => {}
 
   return (
     <Card width={'35vw'}>
@@ -106,7 +110,7 @@ const Exchange = () => {
                 className="h-16 w-full rounded-xl bg-vanilla1 px-3 text-center text-xl"
                 value={sellAmount}
                 thousandSeparator={true}
-                suffix={` ${sell.currency}`}
+                suffix={` ${sell.stableCoin}`}
                 onValueChange={(input) => {
                   handleInputChange('sell', input.value)
                 }}
@@ -139,7 +143,7 @@ const Exchange = () => {
                 className="h-16 w-full rounded-xl bg-vanilla1 px-3 text-center text-xl"
                 value={buyAmount}
                 thousandSeparator={true}
-                suffix={` ${buy.currency}`}
+                suffix={` ${buy.stableCoin}`}
                 onValueChange={(input) => {
                   handleInputChange('buy', input.value)
                 }}
@@ -173,7 +177,7 @@ const Exchange = () => {
           <div className="flex justify-between">
             <div className="text-xs">Exchange Rate</div>
             <div className="text-xs font-bold">
-              1 {sell.currency} = {exchangeRate} {buy.currency}
+              1 {sell.stableCoin} = {exchangeRate} {buy.stableCoin}
             </div>
           </div>
           <div className="flex justify-between pt-2 pb-6">
