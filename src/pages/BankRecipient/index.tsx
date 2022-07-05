@@ -19,6 +19,27 @@ const BankRecipient = () => {
       navigate('/remit/exchange')
     }, 1500)
   }
+
+  const randomSwiftCodeGenerator = () => {
+    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZ'
+
+    const string_length = 8
+    let randomstringGenerator = ''
+
+    for (let i = 0; i < string_length; i++) {
+      let rnum = Math.floor(Math.random() * chars.length)
+      randomstringGenerator += chars.substring(rnum, rnum + 1)
+    }
+    setSwiftCode(randomstringGenerator)
+  }
+
+  const autoPopulateRecipient = () => {
+    setAccountName('John Doe')
+    randomSwiftCodeGenerator()
+    setAccountNumber(
+      (Math.floor(Math.random() * 9000000000) + 1000000000).toString(),
+    )
+  }
   return (
     <div
       style={{ width: '50vw' }}
@@ -28,7 +49,12 @@ const BankRecipient = () => {
         style={{ width: '30vw' }}
         className="flex justify-between border border-gray1 px-10 py-4"
       >
-        <img src={BankLogo} alt="bank-logo" />
+        <img
+          src={BankLogo}
+          alt="bank-logo"
+          className="cursor-pointer"
+          onClick={autoPopulateRecipient}
+        />
         <div className="ml-4">
           <div>
             <div className="font-workSans text-sm">Account Name</div>
