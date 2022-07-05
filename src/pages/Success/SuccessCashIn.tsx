@@ -19,13 +19,13 @@ const SuccessCashIn = (props) => {
         <div className="py-1 font-workSans text-sm">
           Cash-in exactly {amount} {currency.currency}
         </div>
-        <div className="py-1 font-workSans text-blue1 underline hover:cursor-pointer">
+        {/* <div className="py-1 font-workSans text-blue1 underline hover:cursor-pointer">
           View on Explorer
-        </div>
+        </div> */}
         <div className="py-2">
           <button
             className="flex items-center rounded-md bg-blue1 py-2 px-4 font-medium text-white"
-            onClick={() => nextBtn('exchange')}
+            onClick={() => nextBtn('bank-recipient')}
           >
             NEXT <img src={Arrow} className="pl-2" />
           </button>

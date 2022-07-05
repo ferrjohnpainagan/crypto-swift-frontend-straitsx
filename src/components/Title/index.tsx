@@ -21,8 +21,8 @@ const Title = () => {
   }
   return (
     <div
-      style={{ fontSize: '42px' }}
-      className="mt-6 font-poppins font-semibold text-blue1"
+      style={{ fontSize: '42px', width: '30vw' }}
+      className="mt-6 text-right font-poppins font-semibold text-blue1"
     >
       {title}
     </div>

@@ -21,7 +21,7 @@ const CurrencyDropdown = ({
           {selected === '' ? (
             name
           ) : (
-            <div className="flex items-center">{selected.currency}</div>
+            <div className="flex items-center">{selected.stableCoin}</div>
           )}
           <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
         </Menu.Button>
@@ -50,7 +50,7 @@ const CurrencyDropdown = ({
                       )}
                       onClick={() => setSelected(item)}
                     >
-                      {item.currency}
+                      {item.stableCoin}
                     </a>
                   )}
                 </Menu.Item>

@@ -6,7 +6,13 @@ const Stepper = () => {
   const location = useLocation()
   const currentPath = location.pathname.substring(1)
 
-  const steps = ['bank-login', 'cash-in', 'exchange', 'cash-out']
+  const steps = [
+    'bank-login',
+    'cash-in',
+    'bank-recipient',
+    'exchange',
+    'cash-out',
+  ]
   const getIndex = (step: string) => {
     let stepIndex
     steps.map((value, index) => {
@@ -75,6 +81,7 @@ const Stepper = () => {
               Log in to bank account
             </div>
           </div>
+
           <div
             className={`flex-auto border-t-8 border-b-2 ${
               styleStep('cash-in') === 'active' ||
@@ -114,10 +121,51 @@ const Stepper = () => {
               Cash-in
             </div>
           </div>
+
+          <div
+            className={`flex-auto border-t-8 border-b-2 ${
+              styleStep('bank-recipient') === 'active' ||
+              styleStep('bank-recipient') === 'isBefore'
+                ? 'border-blue1'
+                : 'border-gray2'
+            }`}
+          ></div>
+          <div className="relative flex items-center">
+            <div
+              style={{ width: '30px', height: '30px' }}
+              className={`text-md flex h-8 w-8 justify-center rounded-full border-2 ${
+                styleStep('bank-recipient') === 'active'
+                  ? 'border-gray1 bg-gray1'
+                  : styleStep('bank-recipient') === 'inactive'
+                  ? 'border-gray3 bg-gray3'
+                  : 'border-blue1 bg-blue1'
+              } text-white`}
+            >
+              {styleStep('bank-recipient') === 'isBefore' ? (
+                <>
+                  <img src={Check} style={{ width: '15px' }} />
+                </>
+              ) : (
+                '3'
+              )}
+            </div>
+            <div
+              className={`text-md absolute top-0 -ml-10 mt-16 w-32 text-center font-roboto font-bold ${
+                styleStep('bank-recipient') === 'active'
+                  ? 'text-gray1'
+                  : styleStep('bank-recipient') === 'inactive'
+                  ? 'text-gray3'
+                  : 'text-blue1'
+              }`}
+            >
+              Enter recipient bank account
+            </div>
+          </div>
+
           <div
             className={`flex-auto border-t-8 border-b-2 ${
               styleStep('exchange') === 'active' ||
-              styleStep('cash-in') === 'isBefore'
+              styleStep('exchange') === 'isBefore'
                 ? 'border-blue1'
                 : 'border-gray2'
             }`}
@@ -138,7 +186,7 @@ const Stepper = () => {
                   <img src={Check} style={{ width: '15px' }} />
                 </>
               ) : (
-                '3'
+                '4'
               )}
             </div>
             <div
@@ -153,6 +201,7 @@ const Stepper = () => {
               Exchange
             </div>
           </div>
+
           <div
             className={`flex-auto border-t-8 border-b-2 ${
               styleStep('cash-out') === 'active' ||
@@ -177,7 +226,7 @@ const Stepper = () => {
                   <img src={Check} style={{ width: '15px' }} />
                 </>
               ) : (
-                '4'
+                '5'
               )}
             </div>
             <div

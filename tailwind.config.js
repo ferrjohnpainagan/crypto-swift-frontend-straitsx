@@ -22,6 +22,10 @@ module.exports = {
         vanilla3: '#F5F5F5',
         black1: '#404040',
       },
+      animation: {
+        bounce200: 'bounce 1s infinite 200ms',
+        bounce400: 'bounce 1s infinite 400ms',
+      },
     },
   },
   plugins: [],
