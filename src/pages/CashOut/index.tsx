@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import NumberFormat from 'react-number-format'
 import { useXaveAPI } from 'hooks/useXaveAPI'
@@ -14,6 +14,7 @@ const CashOut = () => {
   const username = localStorage.getItem('username')
   const customerId = localStorage.getItem('customerId')
   const accountNumber = localStorage.getItem('accountNumber')
+  const isLoggedIn = localStorage.getItem('isLoggedIn')
   const [amount, setAmount] = useState('0.0')
   const [cashOutAmount, setCashOutAmount] = useState<any>()
   const [cashOutCurrency, setCashOutCurrency] = useState('IDR')
@@ -25,6 +26,11 @@ const CashOut = () => {
   )
 
   const { processCashOut } = useXaveAPI()
+
+  useEffect(() => {
+    if (isLoggedIn == 'true') return
+    navigate('/remit/bank-login')
+  }, [])
 
   const handleCashOut = async () => {
     setLoading(true)
