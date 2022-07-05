@@ -14,6 +14,7 @@ import Loader from 'components/Loader'
 import { calcExchangeRate } from 'utils/exchangeRate'
 
 const Exchange = () => {
+  const isLoggedIn = localStorage.getItem('isLoggedIn')
   const [sell, setSell] = useState({ stableCoin: 'xSGD' })
   const [buy, setBuy] = useState({ stableCoin: 'xIDR' })
   const [sellAmount, setSellAmount] = useState('')
@@ -27,6 +28,11 @@ const Exchange = () => {
 
   const { getExchangeRate } = useCurrencyAPI()
   const { processExchange } = useXaveAPI()
+
+  useEffect(() => {
+    if (isLoggedIn == 'true') return
+    navigate('/remit/bank-login')
+  }, [])
 
   const handleExchange = async () => {
     setLoading(true)
