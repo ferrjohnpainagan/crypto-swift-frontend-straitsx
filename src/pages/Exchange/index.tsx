@@ -80,6 +80,8 @@ const Exchange = () => {
         parseFloat(input) * parseFloat(rate)
           ? (parseFloat(input) * parseFloat(rate)).toString()
           : ''
+
+      console.log(input, parseFloat(input), parseFloat(rate))
       setSellAmount(calculatedAmount)
     }
   }
@@ -109,10 +111,14 @@ const Exchange = () => {
               <NumberFormat
                 className="h-16 w-full rounded-xl bg-vanilla1 px-3 text-center text-xl"
                 value={sellAmount}
-                thousandSeparator={true}
-                suffix={` ${sell.stableCoin}`}
-                onValueChange={(input) => {
-                  handleInputChange('sell', input.value)
+                decimalScale={2}
+                // thousandSeparator={true}
+                // suffix={` ${sell.stableCoin}`}
+                // onValueChange={(input) => {
+                //   handleInputChange('sell', input.value)
+                // }}
+                onChange={(e) => {
+                  handleInputChange('sell', e.target.value)
                 }}
               />
               {/* <input
@@ -142,10 +148,14 @@ const Exchange = () => {
               <NumberFormat
                 className="h-16 w-full rounded-xl bg-vanilla1 px-3 text-center text-xl"
                 value={buyAmount}
-                thousandSeparator={true}
-                suffix={` ${buy.stableCoin}`}
-                onValueChange={(input) => {
-                  handleInputChange('buy', input.value)
+                decimalScale={2}
+                // thousandSeparator={true}
+                // suffix={` ${buy.stableCoin}`}
+                // onValueChange={(input) => {
+                //   handleInputChange('buy', input.value)
+                // }}
+                onChange={(e) => {
+                  handleInputChange('buy', e.target.value)
                 }}
               />
               {/* <input
