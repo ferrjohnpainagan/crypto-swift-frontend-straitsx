@@ -61,7 +61,12 @@ const BankLogin = () => {
   return (
     <>
       <div>
-        <BankLoginCard handleLoginBank={handleLoginBank} loading={loading} linkToken={linkToken} />
+        {
+          linkToken ? 
+          <BankLoginCard handleLoginBank={handleLoginBank} loading={loading} linkToken={linkToken} /> :
+          null
+        }
+        {/* <BankLoginCard handleLoginBank={handleLoginBank} loading={loading} linkToken={linkToken} /> */}
       </div>
     </>
   )
