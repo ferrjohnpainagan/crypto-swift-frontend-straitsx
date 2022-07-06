@@ -47,12 +47,10 @@ const BankLogin = () => {
   }
 
   const getLinkToken = async () => {
-    setLoading(true)
     const response = await generateLinkToken()
     const linkToken = response.data.linkToken
     console.log(response)
     console.log('linkToken:', linkToken)
-    setLoading(false)
     setLinkToken(linkToken)
   }
 
@@ -64,14 +62,14 @@ const BankLogin = () => {
   return (
     <>
       <div>
-        {loading ? (
-          <Loader />
-        ) : (
+        {linkToken ? (
           <BankLoginCard
             handleLoginBank={handleLoginBank}
             loading={loading}
             linkToken={linkToken}
           />
+        ) : (
+          <Loader />
         )}
       </div>
     </>
