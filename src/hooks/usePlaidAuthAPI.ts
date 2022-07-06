@@ -9,9 +9,9 @@ export function usePlaidAuthAPI(): any {
       const request: AxiosRequestConfig = {
         method: 'POST',
         url: REACT_APP_PLAID_GENERATE_TOKENAPI_URL,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
+        // headers: {
+        //   'Access-Control-Allow-Origin': '*',
+        // },
       }
       try {
         const res: AxiosResponse = await axios(request)
