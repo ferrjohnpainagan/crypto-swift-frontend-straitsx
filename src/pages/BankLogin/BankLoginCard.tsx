@@ -30,11 +30,11 @@ const BankLoginCard = ({ handleLoginBank, loading }) => {
           {loading ? <Loader /> : 'Login To Bank'}
         </button>
       </div>
-      <div className="mt-8 text-center font-workSans text-sm">
+      {/* <div className="mt-8 text-center font-workSans text-sm">
         The content of this webpage is not an investment advice and does not
         constitute any offer or solicitation to offer or recommendation of any
         investment product.
-      </div>
+      </div> */}
     </div>
   )
 }
