@@ -49,7 +49,7 @@ const BankLogin = () => {
   const getLinkToken = async () => {
     setLoading(true)
     const response = await generateLinkToken()
-    const linkToken = response.linkToken
+    const linkToken = response.data.linkToken
     console.log(response)
     console.log('linkToken:', linkToken)
     setLoading(false)
