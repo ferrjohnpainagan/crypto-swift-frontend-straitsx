@@ -5,12 +5,15 @@ import { useXaveAPI } from 'hooks/useXaveAPI'
 import type { AppDispatch } from '../../redux/store'
 
 import BankLoginCard from './BankLoginCard'
+import { usePlaidAuthAPI } from '../../hooks/usePlaidAuthAPI'
 
 const BankLogin = () => {
   const navigate = useNavigate()
   const dispatch: AppDispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const { linkBankAccount } = useXaveAPI()
+  const [linkToken, setLinkToken] = useState('')
+  const { generateLinkToken } = usePlaidAuthAPI()
 
   const handleLoginBank = async () => {
     setLoading(true)
@@ -42,14 +45,23 @@ const BankLogin = () => {
     }
   }
 
+  const getLinkToken = async () => {
+    const response = await generateLinkToken()
+    const linkToken = response.linkToken
+    console.log('linkToken:', linkToken)
+    setLinkToken(linkToken)
+  }
+
   useEffect(() => {
     localStorage.clear()
+    getLinkToken()
+
   }, [])
 
   return (
     <>
       <div>
-        <BankLoginCard handleLoginBank={handleLoginBank} loading={loading} />
+        <BankLoginCard handleLoginBank={handleLoginBank} loading={loading} linkToken={linkToken} />
       </div>
     </>
   )
