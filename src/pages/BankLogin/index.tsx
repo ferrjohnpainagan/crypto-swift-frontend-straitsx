@@ -6,6 +6,7 @@ import type { AppDispatch } from '../../redux/store'
 
 import BankLoginCard from './BankLoginCard'
 import { usePlaidAuthAPI } from '../../hooks/usePlaidAuthAPI'
+import Loader from '../../components/Loader/'
 
 const BankLogin = () => {
   const navigate = useNavigate()
@@ -61,7 +62,11 @@ const BankLogin = () => {
   return (
     <>
       <div>
-        <BankLoginCard handleLoginBank={handleLoginBank} loading={loading} linkToken={linkToken} />
+        {
+          linkToken ? 
+          <BankLoginCard handleLoginBank={handleLoginBank} loading={loading} linkToken={linkToken} /> :
+          <Loader />
+        }
       </div>
     </>
   )
