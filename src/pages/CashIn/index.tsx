@@ -3,14 +3,15 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
+import NumberFormat from 'react-number-format'
 import { useXaveAPI } from 'hooks/useXaveAPI'
+import { isInputZero } from 'utils/inputValidations'
 
 import Dropdown from 'components/Dropdown'
 import Card from 'components/Card'
 import { CURRENCIES } from 'constants/index'
 import Loader from 'components/Loader'
 import Status from 'components/Status'
-import NumberFormat from 'react-number-format'
 
 const CashIn = () => {
   const navigate = useNavigate()
@@ -75,6 +76,7 @@ const CashIn = () => {
       <div className="flex h-16 w-full items-center border-b pl-8">
         <p className="font-workSans text-blue1">Cash-in</p>
       </div>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex items-center justify-between px-8 py-6">
           <div className="h-16">
@@ -100,6 +102,10 @@ const CashIn = () => {
                     pattern: {
                       value: /^[0-9.]*$/,
                       message: 'Amount cannot be a negative value.',
+                    },
+                    validate: {
+                      zeroValueInput: (value) =>
+                        !isInputZero(value) || 'Amount cannot be zero.',
                     },
                   }}
                   render={({ field }) => (
@@ -141,7 +147,7 @@ const CashIn = () => {
               // type="button"
               type="submit"
               className={`mt-2 flex h-12 w-full justify-center rounded-lg ${
-                !loading ? 'bg-blue1 hover:bg-blue2' : 'bg-gray1'
+                !loading ? 'bg-blue1 hover:bg-blue2' : 'bg-gray1 opacity-50'
               }  py-3 font-workSans font-medium text-white`}
               disabled={loading}
             >

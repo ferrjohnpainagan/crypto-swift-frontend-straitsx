@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import NumberFormat from 'react-number-format'
+import { useForm, Controller } from 'react-hook-form'
+import { ErrorMessage } from '@hookform/error-message'
 import { useXaveAPI } from 'hooks/useXaveAPI'
+import { calcExchangeRate } from 'utils/exchangeRate'
+import { isInputZero } from 'utils/inputValidations'
+
 import Card from 'components/Card'
 import Dropdown from 'components/Dropdown'
 import Loader from 'components/Loader'
 import Status from 'components/Status'
 import { CURRENCIES } from 'constants/index'
-import { calcExchangeRate } from 'utils/exchangeRate'
 
 const CashOut = () => {
   const navigate = useNavigate()
@@ -16,14 +20,9 @@ const CashOut = () => {
   const accountNumber = localStorage.getItem('accountNumber')
   const isLoggedIn = localStorage.getItem('isLoggedIn')
   const [amount, setAmount] = useState('0.0')
-  const [cashOutAmount, setCashOutAmount] = useState<any>()
-  const [cashOutCurrency, setCashOutCurrency] = useState('IDR')
-  const [currency, setCurrency] = useState<any>(CURRENCIES[0])
+  const [currency, setCurrency] = useState<any>(CURRENCIES[1])
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState('pending')
-  const [exchangeRate, setExchangeRate] = useState(
-    calcExchangeRate('SGD', 'IDR'),
-  )
 
   const { processCashOut } = useXaveAPI()
 
@@ -32,28 +31,40 @@ const CashOut = () => {
     navigate('/remit/bank-login')
   }, [])
 
-  const handleCashOut = async () => {
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    criteriaMode: 'all',
+  })
+
+  const onSubmit = async (data) => {
+    console.log(data)
+    await handleCashOut(data)
+  }
+
+  const handleCashOut = async (data) => {
+    const cashOutAmount = data.amount
     setLoading(true)
-    const rate = exchangeRate
+    setAmount(cashOutAmount)
 
     try {
       const response = await processCashOut({
         username: username,
         customerId: customerId,
         bankAccountNumber: accountNumber,
-        amount: amount,
+        amount: data.amount,
       })
-      console.log(response)
+
       if (response.status === 200) {
         setStatus('success')
-        console.log(cashOutAmount)
+
         setTimeout(() => {
           navigate('/remit/success/cash-out', {
             state: {
-              amount: amount,
+              amount: cashOutAmount,
               currency: currency,
-              cashOutAmount: Number(amount),
-              cashOutCurrency: cashOutCurrency,
             },
           })
         }, 1500)
@@ -69,65 +80,78 @@ const CashOut = () => {
         <p className="font-workSans text-blue1">Cash-out</p>
       </div>
 
-      <div className="flex items-center justify-between px-8 py-6">
-        <div>
-          <Dropdown
-            name={'Select'}
-            options={CURRENCIES}
-            selected={currency}
-            setSelected={setCurrency}
-          />
-        </div>
-        <div style={{ width: '18vw' }}>
-          <div className="text-md font-workSans font-semibold text-black1">
-            Amount
-          </div>
-          <div className="flex justify-between rounded-lg bg-vanilla1 p-3 align-bottom">
-            {/* <div className="flex flex-col">
-              <div className="font-workSans text-xs">BALANCE: 120,420</div>
-              <input
-                type="text"
-                className="align-end mt-4 flex w-full border-none border-transparent bg-transparent font-roboto text-2xl focus:outline-none"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-              />
-            </div>
-            <div className="flex self-end">
-              <button className="rounded-xl border border-blue1 p-1 text-xs text-blue1">
-                MAX
-              </button>
-            </div> */}
-            {/* <input
-              type="text"
-              className="align-end flex w-full border-none border-transparent bg-transparent font-roboto text-2xl focus:outline-none"
-              value={amount}
-              onChange={(e) => {
-                setAmount(e.target.value)
-              }}
-            /> */}
-            <NumberFormat
-              className="align-end flex w-full border-none border-transparent bg-transparent font-roboto text-2xl focus:outline-none"
-              value={amount}
-              thousandSeparator={true}
-              onValueChange={(input) => {
-                setAmount(input.value)
-              }}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex items-center justify-between px-8 py-6">
+          <div>
+            <Dropdown
+              name={'Select'}
+              options={CURRENCIES}
+              selected={currency}
+              setSelected={setCurrency}
             />
           </div>
-          <button
-            type="button"
-            className={`mt-6 flex w-full justify-center rounded-lg  ${
-              !(parseFloat(amount) > 0 && currency !== '') || loading
-                ? 'bg-gray1 opacity-50'
-                : 'bg-blue1 hover:bg-blue2'
-            }  py-3 font-workSans font-medium text-white`}
-            disabled={!(parseFloat(amount) > 0 && currency !== '') || loading}
-            onClick={handleCashOut}
-          >
-            {loading ? <Loader /> : 'Cash-out'}
-          </button>
+          <div style={{ width: '18vw' }}>
+            <div className="text-md font-workSans font-semibold text-black1">
+              Amount
+            </div>
+            <div className="flex justify-between rounded-lg bg-vanilla1 p-3 align-bottom">
+              <Controller
+                control={control}
+                name="amount"
+                rules={{
+                  required: 'Amount is required.',
+                  pattern: {
+                    value: /^[0-9.]*$/,
+                    message: 'Amount cannot be a negative value.',
+                  },
+                  validate: {
+                    zeroValueInput: (value) =>
+                      !isInputZero(value) || 'Amount cannot be zero.',
+                  },
+                }}
+                render={({ field }) => (
+                  <NumberFormat
+                    {...field}
+                    decimalScale={2}
+                    className="align-end mt-4 flex w-full border-none border-transparent bg-transparent font-roboto text-2xl focus:outline-none"
+                  />
+                )}
+              />
+            </div>
+            <div className="mt-2 h-8">
+              <ErrorMessage
+                errors={errors}
+                name="amount"
+                render={({ messages }: any) => {
+                  console.log('messages', messages)
+
+                  return messages
+                    ? Object.entries(messages).map(([type, message]: any) => (
+                        <p
+                          className="font-workSans text-xs text-red-600"
+                          key={type}
+                        >
+                          {message}
+                        </p>
+                      ))
+                    : null
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              className={`mt-6 flex w-full justify-center rounded-lg  ${
+                !loading ? 'bg-blue1 hover:bg-blue2' : 'bg-gray1 opacity-50'
+              }  py-3 font-workSans font-medium text-white`}
+              // onClick={handleCashOut}
+            >
+              {loading ? <Loader /> : 'Cash-out'}
+            </button>
+          </div>
         </div>
-      </div>
+      </form>
+
       <div className="px-8 font-workSans text-black1">
         {/* <div className="flex justify-between">
           <div className="text-xs">Exchange Rate</div>
