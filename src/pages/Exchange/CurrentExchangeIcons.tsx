@@ -5,7 +5,7 @@ const CurrentExchangeIcons = ({ sell, buy, currencies }) => {
   const renderIcon = (type: string) => {
     let icon: any
     currencies.map((item) => {
-      if (item.currency === type) {
+      if (item.stableCoin === type) {
         icon = item.image
       } else {
         icon
@@ -16,9 +16,15 @@ const CurrentExchangeIcons = ({ sell, buy, currencies }) => {
 
   return (
     <div className="flex items-center">
-      <img src={renderIcon(sell.currency)} className="rounded-full shadow-md" />
+      <img
+        src={renderIcon(sell.stableCoin)}
+        className="rounded-full shadow-md"
+      />
       <img src={RightChevron} className="mx-4" />
-      <img src={renderIcon(buy.currency)} className="rounded-full shadow-md" />
+      <img
+        src={renderIcon(buy.stableCoin)}
+        className="rounded-full shadow-md"
+      />
     </div>
   )
 }

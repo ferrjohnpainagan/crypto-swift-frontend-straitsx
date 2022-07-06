@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import BankLogo from '../../assets/bank-logo.svg'
 import Loader from 'components/Loader'
 
 import { usePlaidLink } from 'react-plaid-link'
-import { usePlaidAuthAPI } from '../../hooks/usePlaidAuthAPI'
 
 const BankLoginCard = ({ handleLoginBank, loading, linkToken }) => {
   // const [linkToken, setLinkToken] = useState(false)
@@ -27,17 +25,17 @@ const BankLoginCard = ({ handleLoginBank, loading, linkToken }) => {
           type="button"
           style={{ width: '30vw' }}
           className="mt-12 flex justify-center rounded-lg bg-blue1 py-3 font-workSans text-white hover:bg-blue2"
-          onClick={() => handleLoginBank()}
+          onClick={() => open()}
           disabled={loading}
         >
           {loading ? <Loader /> : 'Login To Bank'}
         </button>
       </div>
-      <div className="mt-8 text-center font-workSans text-sm">
+      {/* <div className="mt-8 text-center font-workSans text-sm">
         The content of this webpage is not an investment advice and does not
         constitute any offer or solicitation to offer or recommendation of any
         investment product.
-      </div>
+      </div> */}
     </div>
   )
 }

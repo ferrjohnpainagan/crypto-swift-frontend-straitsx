@@ -19,6 +19,7 @@ module.exports = {
         cardStroke: '#E8E8E8',
         vanilla1: '#f5f5f5',
         vanilla2: '#E5E5E5',
+        vanilla3: '#F5F5F5',
         black1: '#404040',
       },
       animation: {
