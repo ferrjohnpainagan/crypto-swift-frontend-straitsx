@@ -47,26 +47,31 @@ const BankLogin = () => {
   }
 
   const getLinkToken = async () => {
+    setLoading(true)
     const response = await generateLinkToken()
     const linkToken = response.linkToken
     console.log('linkToken:', linkToken)
     setLinkToken(linkToken)
+    setLoading(false)
   }
 
   useEffect(() => {
     localStorage.clear()
     getLinkToken()
-
   }, [])
 
   return (
     <>
       <div>
-        {
-          linkToken ? 
-          <BankLoginCard handleLoginBank={handleLoginBank} loading={loading} linkToken={linkToken} /> :
+        {loading ? (
           <Loader />
-        }
+        ) : (
+          <BankLoginCard
+            handleLoginBank={handleLoginBank}
+            loading={loading}
+            linkToken={linkToken}
+          />
+        )}
       </div>
     </>
   )
