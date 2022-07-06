@@ -103,6 +103,10 @@ const CashIn = () => {
                       value: /^[0-9.]*$/,
                       message: 'Amount cannot be a negative value.',
                     },
+                    min: {
+                      value: 1,
+                      message: 'Minimum amount is 1.',
+                    },
                     validate: {
                       zeroValueInput: (value) =>
                         !isInputZero(value) || 'Amount cannot be zero.',
