@@ -50,9 +50,10 @@ const BankLogin = () => {
     setLoading(true)
     const response = await generateLinkToken()
     const linkToken = response.linkToken
+    console.log(response)
     console.log('linkToken:', linkToken)
-    setLinkToken(linkToken)
     setLoading(false)
+    setLinkToken(linkToken)
   }
 
   useEffect(() => {
