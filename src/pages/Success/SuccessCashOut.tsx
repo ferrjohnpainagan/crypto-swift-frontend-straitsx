@@ -3,7 +3,7 @@ import Card from 'components/Card'
 import ArrowRight from '../../assets/arrow-right.svg'
 import SuccessCashOutIcon from '../../assets/success-cash-out.svg'
 const SuccessCashOut = (props) => {
-  const { amount, currency, cashOutAmount, cashOutCurrency } = props.state
+  const { amount, currency } = props.state
   console.log(props.state)
   return (
     <Card width={'30vw'}>
@@ -26,7 +26,7 @@ const SuccessCashOut = (props) => {
           </div> */}
           <div>
             <a className="font-roboto text-2xl font-semibold text-blue1">
-              {cashOutAmount}
+              {amount}
             </a>
             <a className="pl-2 font-workSans text-base text-black1">
               {currency.currency}
