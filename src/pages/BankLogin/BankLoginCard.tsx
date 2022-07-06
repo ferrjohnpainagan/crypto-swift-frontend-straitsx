@@ -1,13 +1,14 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
 import BankLogo from '../../assets/bank-logo.svg'
 import Loader from 'components/Loader'
 
 import { usePlaidLink } from 'react-plaid-link'
 
-const BankLoginCard = ({ handleLoginBank, loading }) => {
+const BankLoginCard = ({ handleLoginBank, loading, linkToken }) => {
+  // const [linkToken, setLinkToken] = useState(false)
   const { open } = usePlaidLink({
-    token: process.env.REACT_APP_PLAID_LINK_TOKEN as string, // mocked for now
+    // token: 'link-sandbox-727eef27-859e-4787-a25e-7c9f864e375d', // mocked for now
+    token: linkToken,
     onSuccess: handleLoginBank,
   })
 
