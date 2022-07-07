@@ -9,9 +9,8 @@ const Success = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const currentPath = location.pathname
-  const pathState = location.state
+  const pathState = location?.state || false
   const isSuccessPage = currentPath.includes('success')
-  const isPathStateNotEmpty = !_.isEmpty(pathState)
 
   const handleNext = (type: string) => {
     switch (type) {
@@ -29,23 +28,20 @@ const Success = () => {
     }
   }
 
-  useEffect(() => {
-    if (isSuccessPage && isPathStateNotEmpty) {
-      return
+  const renderComponent = () => {
+    switch (true) {
+      //   case currentPath.includes('cash-in'):
+      //     return <SuccessCashIn state={pathState} nextBtn={handleNext} />
+      //   case currentPath.includes('exchange'):
+      //     return <SuccessExchange state={pathState} nextBtn={handleNext} />
+      //   case currentPath.includes('cash-out'):
+      //     return <SuccessCashOut state={pathState} />
+      default:
+        return <></>
     }
-    navigate('/remit/bank-login')
-  }, [])
-
-  switch (true) {
-    case currentPath.includes('cash-in'):
-      return <SuccessCashIn state={pathState} nextBtn={handleNext} />
-    case currentPath.includes('exchange'):
-      return <SuccessExchange state={pathState} nextBtn={handleNext} />
-    case currentPath.includes('cash-out'):
-      return <SuccessCashOut state={pathState} />
-    default:
-      return <></>
   }
+
+  return renderComponent()
 }
 
 export default Success

@@ -1,9 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+
 import Card from 'components/Card'
 import ArrowRight from '../../assets/arrow-right.svg'
 import SuccessCashOutIcon from '../../assets/success-cash-out.svg'
-const SuccessCashOut = (props) => {
-  const { amount, currency, txId } = props.state
+const SuccessCashOut = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const pathState: any = location?.state || false
+
+  useEffect(() => {
+    if (!pathState) {
+      navigate('/remit/cash-out')
+    }
+  }, [])
+
+  const { amount, currency, txId } = pathState
 
   return (
     <Card width={'30vw'}>
@@ -36,7 +48,7 @@ const SuccessCashOut = (props) => {
               {amount}
             </a>
             <a className="pl-2 font-workSans text-base text-black1">
-              {currency.currency}
+              {currency?.currency}
             </a>
           </div>
         </div>
