@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import NumberFormat from 'react-number-format'
+import { randomCodeGenerator } from 'utils/codeGenerator'
+
 import BankLogo from 'assets/bank-logo-2.svg'
 import Loader from 'components/Loader'
 
@@ -21,16 +23,8 @@ const BankRecipient = () => {
   }
 
   const randomSwiftCodeGenerator = () => {
-    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZ'
-
-    const string_length = 8
-    let randomstringGenerator = ''
-
-    for (let i = 0; i < string_length; i++) {
-      let rnum = Math.floor(Math.random() * chars.length)
-      randomstringGenerator += chars.substring(rnum, rnum + 1)
-    }
-    setSwiftCode(randomstringGenerator)
+    const randomCode = randomCodeGenerator(8)
+    setSwiftCode(randomCode)
   }
 
   const autoPopulateRecipient = () => {

@@ -4,7 +4,7 @@ import Arrow from '../../assets/arrow.svg'
 import SuccessCashInIcon from '../../assets/safe 1.svg'
 
 const SuccessCashIn = (props) => {
-  const { amount, currency } = props.state
+  const { amount, currency, txId } = props.state
   const { nextBtn } = props
 
   return (
@@ -15,6 +15,12 @@ const SuccessCashIn = (props) => {
         </div>
         <div className="py-2 font-workSans text-xl font-semibold text-blue1">
           Cash-in Successful
+        </div>
+        <div className="py-1 font-workSans text-sm">
+          Transaction ID:{' '}
+          <a className="cursor-pointer font-workSans text-blue1 underline">
+            {txId}
+          </a>
         </div>
         <div className="py-1 font-workSans text-sm">
           Cash-in exactly {amount} {currency.currency}

@@ -6,6 +6,7 @@ import { ErrorMessage } from '@hookform/error-message'
 import NumberFormat from 'react-number-format'
 import { useXaveAPI } from 'hooks/useXaveAPI'
 import { isInputZero } from 'utils/inputValidations'
+import { randomCodeGenerator } from 'utils/codeGenerator'
 
 import Dropdown from 'components/Dropdown'
 import Card from 'components/Card'
@@ -24,6 +25,7 @@ const CashIn = () => {
   const [amount, setAmount] = useState('0.0')
   const [currency, setCurrency] = useState<any>(CURRENCIES[0])
   const [status, setStatus] = useState('pending')
+  const [balance, setBalance] = useState(200)
 
   useEffect(() => {
     if (isLoggedIn == 'true') return
@@ -36,6 +38,7 @@ const CashIn = () => {
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
   } = useForm({
     criteriaMode: 'all',
   })
@@ -56,11 +59,17 @@ const CashIn = () => {
         amount: data.amount,
       })
 
+      const transactionId = randomCodeGenerator(6)
+
       if (response.status === 200) {
         setStatus('success')
         setTimeout(() => {
           navigate('/remit/success/cash-in', {
-            state: { amount: data.amount, currency: currency },
+            state: {
+              amount: data.amount,
+              currency: currency,
+              txId: transactionId,
+            },
           })
         }, 1500)
       }
@@ -68,6 +77,10 @@ const CashIn = () => {
       console.log(error)
       setLoading(false)
     }
+  }
+
+  const handleMax = () => {
+    setValue('amount', balance)
   }
 
   useEffect(() => {}, [])
@@ -93,7 +106,9 @@ const CashIn = () => {
             </div>
             <div className="flex justify-between rounded-lg bg-vanilla1 p-3 align-bottom">
               <div className="flex flex-col">
-                <div className="font-workSans text-xs">BALANCE: 200 SGD </div>
+                <div className="font-workSans text-xs">
+                  BALANCE: {balance} {currency.currency}{' '}
+                </div>
                 <Controller
                   control={control}
                   name="amount"
@@ -122,7 +137,11 @@ const CashIn = () => {
                 />
               </div>
               <div className="flex self-end">
-                <button className="rounded-xl border border-blue1 p-1 text-xs text-blue1">
+                <button
+                  type="button"
+                  className="rounded-xl border border-blue1 p-1 text-xs text-blue1"
+                  onClick={handleMax}
+                >
                   MAX
                 </button>
               </div>
