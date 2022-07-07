@@ -4,7 +4,7 @@ import Loader from 'components/Loader'
 
 import { usePlaidLink } from 'react-plaid-link'
 
-const BankLoginCard = ({ handleLoginBank, loading, linkToken }) => {
+const BankLoginCard = ({ handleLoginBank, loading, linkToken, env }) => {
   // const [linkToken, setLinkToken] = useState(false)
   const { open } = usePlaidLink({
     // token: 'link-sandbox-727eef27-859e-4787-a25e-7c9f864e375d', // mocked for now
@@ -25,7 +25,9 @@ const BankLoginCard = ({ handleLoginBank, loading, linkToken }) => {
           type="button"
           style={{ width: '30vw' }}
           className="mt-12 flex justify-center rounded-lg bg-blue1 py-3 font-workSans text-white hover:bg-blue2"
-          onClick={() => open()}
+          onClick={() => {
+            env === 'production' ? open() : handleLoginBank()
+          }}
           disabled={loading}
         >
           {loading ? <Loader /> : 'Login To Bank'}

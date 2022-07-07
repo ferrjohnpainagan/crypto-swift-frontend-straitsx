@@ -9,6 +9,7 @@ import { usePlaidAuthAPI } from '../../hooks/usePlaidAuthAPI'
 import Loader from '../../components/Loader/'
 
 const BankLogin = () => {
+  const NODE_ENV = process.env.NODE_ENV
   const navigate = useNavigate()
   const dispatch: AppDispatch = useDispatch()
   const [loading, setLoading] = useState(false)
@@ -56,22 +57,24 @@ const BankLogin = () => {
 
   useEffect(() => {
     localStorage.clear()
+    if (NODE_ENV === 'development') return
     getLinkToken()
   }, [])
 
   return (
     <>
-      <div>
-        {linkToken ? (
-          <BankLoginCard
-            handleLoginBank={handleLoginBank}
-            loading={loading}
-            linkToken={linkToken}
-          />
-        ) : (
+      {linkToken || NODE_ENV === 'development' ? (
+        <BankLoginCard
+          handleLoginBank={handleLoginBank}
+          loading={loading}
+          linkToken={linkToken}
+          env={NODE_ENV}
+        />
+      ) : (
+        <div className="flex justify-center">
           <Loader />
-        )}
-      </div>
+        </div>
+      )}
     </>
   )
 }
