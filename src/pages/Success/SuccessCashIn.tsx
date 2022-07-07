@@ -1,11 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Card from 'components/Card'
 import Arrow from '../../assets/arrow.svg'
 import SuccessCashInIcon from '../../assets/safe 1.svg'
 
-const SuccessCashIn = (props) => {
-  const { amount, currency } = props.state
-  const { nextBtn } = props
+const SuccessCashIn = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const pathState: any = location?.state || false
+
+  useEffect(() => {
+    if (!pathState) {
+      navigate('/remit/cash-in')
+    }
+  }, [])
+
+  const { amount, currency, txId } = pathState
 
   return (
     <Card width={'30vw'}>
@@ -17,7 +27,13 @@ const SuccessCashIn = (props) => {
           Cash-in Successful
         </div>
         <div className="py-1 font-workSans text-sm">
-          Cash-in exactly {amount} {currency.currency}
+          Transaction ID:{' '}
+          <a className="cursor-pointer font-workSans text-blue1 underline">
+            {txId}
+          </a>
+        </div>
+        <div className="py-1 font-workSans text-sm">
+          Cash-in exactly {amount} {currency?.currency}
         </div>
         {/* <div className="py-1 font-workSans text-blue1 underline hover:cursor-pointer">
           View on Explorer
@@ -25,7 +41,7 @@ const SuccessCashIn = (props) => {
         <div className="py-2">
           <button
             className="flex items-center rounded-md bg-blue1 py-2 px-4 font-medium text-white"
-            onClick={() => nextBtn('bank-recipient')}
+            onClick={() => navigate('/remit/bank-recipient')}
           >
             NEXT <img src={Arrow} className="pl-2" />
           </button>

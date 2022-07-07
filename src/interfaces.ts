@@ -24,6 +24,10 @@ export interface CashInInterface {
   amount: string
 }
 
+export interface CashInSubmitInterface {
+  amount: string
+}
+
 export interface CashOutInterface {
   username: string
   customerId: string
