@@ -7,6 +7,7 @@ import NumberFormat from 'react-number-format'
 import { useXaveAPI } from 'hooks/useXaveAPI'
 import { isInputZero } from 'utils/inputValidations'
 import { randomCodeGenerator } from 'utils/codeGenerator'
+import { CashInSubmitInterface } from 'interfaces'
 
 import Dropdown from 'components/Dropdown'
 import Card from 'components/Card'
@@ -43,12 +44,12 @@ const CashIn = () => {
     criteriaMode: 'all',
   })
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: CashInSubmitInterface) => {
     console.log(data)
     await handleCashIn(data)
   }
 
-  const handleCashIn = async (data) => {
+  const handleCashIn = async (data: CashInSubmitInterface) => {
     setLoading(true)
     setAmount(data.amount)
     try {

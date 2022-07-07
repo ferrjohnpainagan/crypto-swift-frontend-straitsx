@@ -2,8 +2,9 @@ import React from 'react'
 import Card from 'components/Card'
 import Arrow from '../../assets/arrow.svg'
 import SuccessCashInIcon from '../../assets/safe 1.svg'
+import { SuccessCashInInterface } from 'interfaces'
 
-const SuccessCashIn = (props) => {
+const SuccessCashIn = (props: SuccessCashInInterface) => {
   const { amount, currency, txId } = props.state
   const { nextBtn } = props
 
