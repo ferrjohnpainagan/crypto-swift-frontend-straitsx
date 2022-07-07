@@ -4,7 +4,7 @@ import NumberFormat from 'react-number-format'
 import { useForm, Controller } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { useXaveAPI } from 'hooks/useXaveAPI'
-import { calcExchangeRate } from 'utils/exchangeRate'
+import { randomCodeGenerator } from 'utils/codeGenerator'
 import { isInputZero } from 'utils/inputValidations'
 
 import Card from 'components/Card'
@@ -57,6 +57,8 @@ const CashOut = () => {
         amount: data.amount,
       })
 
+      const transactionId = randomCodeGenerator(6)
+
       if (response.status === 200) {
         setStatus('success')
 
@@ -65,6 +67,7 @@ const CashOut = () => {
             state: {
               amount: cashOutAmount,
               currency: currency,
+              txId: transactionId,
             },
           })
         }, 1500)

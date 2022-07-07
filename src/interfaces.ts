@@ -28,15 +28,6 @@ export interface CashInSubmitInterface {
   amount: string
 }
 
-export interface SuccessCashInInterface {
-  state: {
-    amount: string
-    currency: any
-    txId: string
-  }
-  nextBtn: any
-}
-
 export interface CashOutInterface {
   username: string
   customerId: string
