@@ -6,6 +6,9 @@ import { ErrorMessage } from '@hookform/error-message'
 import { useXaveAPI } from 'hooks/useXaveAPI'
 import { randomCodeGenerator } from 'utils/codeGenerator'
 import { isInputZero } from 'utils/inputValidations'
+import mapper from 'external-services/dynamodb_mapper'
+import Customer from 'model/dynamodb/customer'
+import { equals } from '@aws/dynamodb-expressions'
 
 import Card from 'components/Card'
 import Dropdown from 'components/Dropdown'
@@ -41,7 +44,8 @@ const CashOut = () => {
 
   const onSubmit = async (data) => {
     console.log(data)
-    await handleCashOut(data)
+    checkBalance()
+    // await handleCashOut(data)
   }
 
   const handleCashOut = async (data) => {
@@ -75,6 +79,14 @@ const CashOut = () => {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  const checkBalance = async () => {
+    const customer = await mapper.query(Customer, {
+      customerProfileId: customerId,
+      bankAccountNumber: equals(accountNumber),
+    })
+    console.log(customer)
   }
 
   return (
