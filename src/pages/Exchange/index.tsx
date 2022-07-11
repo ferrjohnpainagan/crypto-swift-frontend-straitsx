@@ -8,6 +8,7 @@ import { useCurrencyAPI } from 'hooks/useCurrencyAPI'
 import { useXaveAPI } from 'hooks/useXaveAPI'
 import { calcExchangeRate } from 'utils/exchangeRate'
 import { isInputZero } from 'utils/inputValidations'
+import BigNumber from 'bignumber.js'
 
 import Card from 'components/Card'
 import CurrencyDropdown from './CurrencyDropdown'
@@ -34,7 +35,7 @@ const Exchange = () => {
   }, [])
 
   const { getExchangeRate } = useCurrencyAPI()
-  const { processExchange } = useXaveAPI()
+  const { processExchange, getCryptoWalletBalance } = useXaveAPI()
 
   const {
     handleSubmit,
@@ -42,13 +43,38 @@ const Exchange = () => {
     formState: { errors },
     setValue,
     clearErrors,
+    setError,
   } = useForm({
     criteriaMode: 'all',
   })
 
   const onSubmit = async (data) => {
-    console.log(data)
-    await handleExchange(data)
+    setLoading(true)
+    const response = await isBalanceEnough(data.sellAmount)
+
+    if (response) {
+      await handleExchange(data)
+    } else {
+      setLoading(false)
+      setError('sellAmount', {
+        type: 'error',
+        message: "You don't have enough balance.",
+      })
+    }
+  }
+
+  const isBalanceEnough = async (amount: string) => {
+    const response = await getCryptoWalletBalance()
+    const balanceObject = response
+
+    let walletBalance
+    for (const [key, value] of Object.entries(balanceObject)) {
+      if (key === sell.stableCoin) {
+        walletBalance = new BigNumber(value as string).toFixed(2)
+      }
+    }
+
+    return parseFloat(walletBalance) > parseFloat(amount)
   }
 
   const handleExchange = async (data) => {
@@ -186,7 +212,11 @@ const Exchange = () => {
                               {message}
                             </p>
                           ))
-                        : null
+                        : errors.sellAmount && (
+                            <p className="font-workSans text-xs text-red-600">
+                              {errors.sellAmount.message as any}
+                            </p>
+                          )
                     }}
                   />
                 </div>

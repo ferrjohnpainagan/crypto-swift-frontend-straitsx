@@ -34,3 +34,9 @@ export interface CashOutInterface {
   bankAccountNumber: string
   amount: string
 }
+
+export interface CheckBalanceInterface {
+  amount: string
+  balanceObject: any
+  currency: string
+}

@@ -13,7 +13,6 @@ import Dropdown from 'components/Dropdown'
 import Loader from 'components/Loader'
 import Status from 'components/Status'
 import { CURRENCIES } from 'constants/index'
-import { ethers } from 'ethers'
 
 const CashOut = () => {
   const navigate = useNavigate()
@@ -21,7 +20,6 @@ const CashOut = () => {
   const customerId = localStorage.getItem('customerId')
   const accountNumber = localStorage.getItem('accountNumber')
   const isLoggedIn = localStorage.getItem('isLoggedIn')
-  const [amount, setAmount] = useState('0.0')
   const [currency, setCurrency] = useState<any>(CURRENCIES[1])
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState('pending')
@@ -45,6 +43,7 @@ const CashOut = () => {
   const onSubmit = async (data) => {
     setLoading(true)
     const response = await isBalanceEnough(data.amount)
+
     if (response) {
       await handleCashOut(data)
     } else {
@@ -73,7 +72,6 @@ const CashOut = () => {
   const handleCashOut = async (data) => {
     const cashOutAmount = data.amount
     setLoading(true)
-    setAmount(cashOutAmount)
 
     try {
       const response = await processCashOut({
