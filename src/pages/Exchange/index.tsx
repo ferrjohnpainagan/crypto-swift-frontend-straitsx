@@ -23,9 +23,7 @@ const Exchange = () => {
   const [sell, setSell] = useState({ stableCoin: 'xSGD' })
   const [buy, setBuy] = useState({ stableCoin: 'xIDR' })
   const [status, setStatus] = useState('pending')
-  const [exchangeRate, setExchangeRate] = useState(
-    calcExchangeRate('xSGD', 'xIDR'),
-  )
+  const [exchangeRate, setExchangeRate] = useState('0')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
@@ -35,7 +33,12 @@ const Exchange = () => {
   }, [])
 
   const { getExchangeRate } = useCurrencyAPI()
-  const { processExchange, getCryptoWalletBalance } = useXaveAPI()
+  const { processExchange, getCryptoWalletBalance, viewStablecoinSwap } =
+    useXaveAPI()
+
+  useEffect(() => {
+    handleExchangeRate()
+  }, [])
 
   const {
     handleSubmit,
@@ -81,9 +84,9 @@ const Exchange = () => {
     const sellAmount = Math.round(data.sellAmount).toString()
     const buyAmount = Math.round(data.buyAmount).toString()
 
-    setLoading(true)
     const amountToWei = ethers.utils.parseUnits(sellAmount, 6)
     const amount = ethers.utils.formatUnits(amountToWei, 'wei')
+
     try {
       const response = await processExchange(Number(amount))
       const txHash = `https://polygonscan.com/tx/${response.data.data.transactionHash}`
@@ -111,9 +114,8 @@ const Exchange = () => {
     let calculatedAmount
     let rate
 
-    rate = calcExchangeRate(sell.stableCoin, buy.stableCoin).toString()
+    rate = exchangeRate
     clearErrors()
-    setExchangeRate(rate)
     if (type === 'sell') {
       setValue('sellAmount', input)
       calculatedAmount =
@@ -127,7 +129,7 @@ const Exchange = () => {
        * Rate is calculated differently when the buy input is being changed
        * to correctly handle conversion
        */
-      rate = calcExchangeRate(buy.stableCoin, sell.stableCoin)
+      rate = exchangeRate
       calculatedAmount =
         parseFloat(input) * parseFloat(rate)
           ? (parseFloat(input) * parseFloat(rate)).toString()
@@ -137,7 +139,17 @@ const Exchange = () => {
     }
   }
 
-  const handleCurrencyChange = (type: string, input: any) => {}
+  const handleExchangeRate = async () => {
+    const amountToWei = ethers.utils.parseUnits('1', 6)
+    const amount = ethers.utils.formatUnits(amountToWei, 'wei')
+    const response = await viewStablecoinSwap(amount)
+    setExchangeRate(
+      new BigNumber(response.data.data.rate)
+        .div(10 ** 6)
+        .toFixed(2)
+        .toString(),
+    )
+  }
 
   return (
     <Card width={'35vw'}>
