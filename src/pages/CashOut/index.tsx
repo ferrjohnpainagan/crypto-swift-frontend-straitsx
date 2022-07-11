@@ -6,15 +6,14 @@ import { ErrorMessage } from '@hookform/error-message'
 import { useXaveAPI } from 'hooks/useXaveAPI'
 import { randomCodeGenerator } from 'utils/codeGenerator'
 import { isInputZero } from 'utils/inputValidations'
-import mapper from 'external-services/dynamodb_mapper'
-import Customer from 'model/dynamodb/customer'
-import { equals } from '@aws/dynamodb-expressions'
+import BigNumber from 'bignumber.js'
 
 import Card from 'components/Card'
 import Dropdown from 'components/Dropdown'
 import Loader from 'components/Loader'
 import Status from 'components/Status'
 import { CURRENCIES } from 'constants/index'
+import { ethers } from 'ethers'
 
 const CashOut = () => {
   const navigate = useNavigate()
@@ -27,7 +26,7 @@ const CashOut = () => {
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState('pending')
 
-  const { processCashOut } = useXaveAPI()
+  const { processCashOut, getCryptoWalletBalance } = useXaveAPI()
 
   useEffect(() => {
     if (isLoggedIn == 'true') return
@@ -38,14 +37,37 @@ const CashOut = () => {
     handleSubmit,
     control,
     formState: { errors },
+    setError,
   } = useForm({
     criteriaMode: 'all',
   })
 
   const onSubmit = async (data) => {
-    console.log(data)
-    checkBalance()
-    // await handleCashOut(data)
+    setLoading(true)
+    const response = await isBalanceEnough(data.amount)
+    if (response) {
+      await handleCashOut(data)
+    } else {
+      setLoading(false)
+      setError('amount', {
+        type: 'error',
+        message: "You don't have enough balance.",
+      })
+    }
+  }
+
+  const isBalanceEnough = async (amount: string) => {
+    const response = await getCryptoWalletBalance()
+    const balanceObject = response
+
+    let walletBalance
+    for (const [key, value] of Object.entries(balanceObject)) {
+      if (key === currency.stableCoin) {
+        walletBalance = new BigNumber(value as string).toFixed(2)
+      }
+    }
+
+    return parseFloat(walletBalance) > parseFloat(amount)
   }
 
   const handleCashOut = async (data) => {
@@ -79,14 +101,6 @@ const CashOut = () => {
     } catch (error) {
       console.log(error)
     }
-  }
-
-  const checkBalance = async () => {
-    const customer = await mapper.query(Customer, {
-      customerProfileId: customerId,
-      bankAccountNumber: equals(accountNumber),
-    })
-    console.log(customer)
   }
 
   return (
@@ -142,8 +156,6 @@ const CashOut = () => {
                 errors={errors}
                 name="amount"
                 render={({ messages }: any) => {
-                  console.log('messages', messages)
-
                   return messages
                     ? Object.entries(messages).map(([type, message]: any) => (
                         <p
@@ -153,7 +165,11 @@ const CashOut = () => {
                           {message}
                         </p>
                       ))
-                    : null
+                    : errors.amount && (
+                        <p className="font-workSans text-xs text-red-600">
+                          {errors.amount.message as any}
+                        </p>
+                      )
                 }}
               />
             </div>

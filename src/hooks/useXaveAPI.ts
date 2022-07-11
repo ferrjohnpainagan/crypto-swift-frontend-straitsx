@@ -122,11 +122,27 @@ export function useXaveAPI(): any {
     }
   }, [])
 
+  const getCryptoWalletBalance = useCallback(async () => {
+    const request: AxiosRequestConfig = {
+      method: 'GET',
+      url: `${baseUrl}/balance/crypto_wallet`,
+    }
+
+    try {
+      const res: AxiosResponse = await axios(request)
+      return res.data.data
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }, [])
+
   return {
     linkBankAccount,
     getCustomerBankAccount,
     processCashIn,
     processExchange,
     processCashOut,
+    getCryptoWalletBalance,
   }
 }
