@@ -87,6 +87,8 @@ const Exchange = () => {
     const amountToWei = ethers.utils.parseUnits(sellAmount, 6)
     const amount = ethers.utils.formatUnits(amountToWei, 'wei')
 
+    await handleExchangeRate()
+
     try {
       const response = await processExchange(Number(amount))
       const txHash = `https://polygonscan.com/tx/${response.data.data.transactionHash}`
@@ -110,9 +112,11 @@ const Exchange = () => {
     }
   }
 
-  const handleInputChange = (type: string, input: string) => {
+  const handleInputChange = async (type: string, input: string) => {
     let calculatedAmount
     let rate
+
+    await handleExchangeRate()
 
     rate = exchangeRate
     clearErrors()
@@ -140,9 +144,12 @@ const Exchange = () => {
   }
 
   const handleExchangeRate = async () => {
+    setExchangeRate('----')
+
     const amountToWei = ethers.utils.parseUnits('1', 6)
     const amount = ethers.utils.formatUnits(amountToWei, 'wei')
     const response = await viewStablecoinSwap(amount)
+
     setExchangeRate(
       new BigNumber(response.data.data.rate)
         .div(10 ** 6)
