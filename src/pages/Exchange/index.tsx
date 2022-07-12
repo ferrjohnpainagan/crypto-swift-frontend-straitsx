@@ -87,8 +87,6 @@ const Exchange = () => {
     const amountToWei = ethers.utils.parseUnits(sellAmount, 6)
     const amount = ethers.utils.formatUnits(amountToWei, 'wei')
 
-    await handleExchangeRate()
-
     try {
       const response = await processExchange(Number(amount))
       const txHash = `https://polygonscan.com/tx/${response.data.data.transactionHash}`
