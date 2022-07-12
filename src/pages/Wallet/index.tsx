@@ -1,19 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import HSBar from 'react-horizontal-stacked-bar-chart'
+import { useXaveAPI } from 'hooks/useXaveAPI'
+import currencyFormatter from 'currency-formatter'
+import BigNumber from 'bignumber.js'
+
 import Card from 'components/Card'
 import PieChart from './PieChart'
 import CurrencyDropdown from './CurrencyDropdown'
 import { CURRENCIES } from 'constants/index'
-import HSBar from 'react-horizontal-stacked-bar-chart'
 
 const Wallet = () => {
   const navigate = useNavigate()
   const [currency, setCurrency] = useState<any>(CURRENCIES[0])
+  const [labels, setLabels] = useState([])
+  const [balanceList, setBalanceList] = useState([])
+  const [balanceData, setBalanceData] = useState([])
+  const [totalBalance, setTotalBalance] = useState(0)
+
   const data = {
-    labels: ['SGD', 'IDR', 'USD'],
+    labels: labels,
     datasets: [
       {
-        data: [25844.03, 11030.01, 3381.46],
+        data: balanceList,
         backgroundColor: ['#038BF4', '#F7931A', '#10B9AF'],
         borderWidth: 1,
       },
@@ -33,6 +42,68 @@ const Wallet = () => {
     },
   }
 
+  const { getCryptoWalletBalance } = useXaveAPI()
+
+  useEffect(() => {
+    handleGetWalletBalance(CURRENCIES[0])
+  }, [])
+
+  const handleGetWalletBalance = async (walletCurrency) => {
+    const response = await getCryptoWalletBalance()
+    const entries = Object.entries(response)
+
+    let currencies: any = []
+    let balances: any = []
+    let balanceDataList: any = []
+    let totalWalletBalance = 0
+    let amount: any
+    let color: any
+
+    for (const [symbol, balance] of entries) {
+      if (symbol === 'xIDR') {
+        amount = new BigNumber(balance as string)
+          .div(102000 ** 6)
+          .toFixed(2)
+          .toString()
+      } else {
+        amount = new BigNumber(balance as string)
+          .div(2000 ** 6)
+          .toFixed(2)
+          .toString()
+      }
+
+      currencies.push(symbol)
+      balances.push(amount)
+
+      CURRENCIES.map((currency) => {
+        if (currency.stableCoin === symbol) {
+          color = currency.color
+        }
+      })
+
+      totalWalletBalance += parseFloat(amount)
+
+      balanceDataList.push({
+        value: parseFloat(amount),
+        description: `${currencyFormatter.format(amount, {
+          symbol: walletCurrency.stableCoin,
+          format: '%v %s',
+        })}`,
+        color: color,
+      })
+    }
+
+    setLabels(currencies)
+    setBalanceList(balances)
+    setBalanceData(balanceDataList)
+    setTotalBalance(totalWalletBalance)
+  }
+
+  const handleSelectCurrency = (currency) => {
+    setCurrency(currency)
+    handleGetWalletBalance(currency)
+  }
+
   return (
     <Card width={'50vw'}>
       <div className="flex justify-center">
@@ -40,14 +111,15 @@ const Wallet = () => {
           <div className="font-workSans text-xl">Your Total Balance is</div>
 
           <div className="mx-3 mt-2 flex font-workSans text-3xl text-blue1">
-            $40,255.50
+            {currencyFormatter.format(totalBalance, { code: 'USD' })}
           </div>
+
           <div className="mt-1">
             <CurrencyDropdown
               name={currency}
               options={CURRENCIES}
               selected={currency}
-              setSelected={setCurrency}
+              setSelected={handleSelectCurrency}
             />
           </div>
         </div>
@@ -56,15 +128,7 @@ const Wallet = () => {
         </div>
       </div>
       <div className="px-6 pb-6">
-        <HSBar
-          showTextDown={true}
-          id="hsbarExample"
-          data={[
-            { value: 25844.03, description: '25844.03 SGD', color: '#038BF4' },
-            { value: 11030.01, description: '11030.01 SGD', color: '#F7931A' },
-            { value: 3381.46, description: '3381.46 SGD', color: '#10B9AF' },
-          ]}
-        />
+        <HSBar showTextDown={true} id="hsbarExample" data={balanceData} />
       </div>
       <div className="flex justify-center pb-8">
         <button
