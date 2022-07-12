@@ -9,6 +9,7 @@ import { useXaveAPI } from 'hooks/useXaveAPI'
 import { calcExchangeRate } from 'utils/exchangeRate'
 import { isInputZero } from 'utils/inputValidations'
 import BigNumber from 'bignumber.js'
+import debounce from 'lodash.debounce'
 
 import Card from 'components/Card'
 import CurrencyDropdown from './CurrencyDropdown'
@@ -110,7 +111,8 @@ const Exchange = () => {
     }
   }
 
-  const handleInputChange = async (type: string, input: string) => {
+  const handleInputChange = debounce(async (type: string, input: string) => {
+    setLoading(true)
     let calculatedAmount
     let rate
 
@@ -139,7 +141,8 @@ const Exchange = () => {
 
       setValue('sellAmount', calculatedAmount)
     }
-  }
+    setLoading(false)
+  }, 1000)
 
   const handleExchangeRate = async () => {
     setExchangeRate('----')
@@ -177,14 +180,6 @@ const Exchange = () => {
                 />
               </div>
               <div>
-                {/* <NumberFormat
-                  className="h-16 w-full rounded-xl bg-vanilla1 px-3 text-center text-xl"
-                  value={sellAmount}
-                  decimalScale={2}
-                  onChange={(e) => {
-                    handleInputChange('sell', e.target.value)
-                  }}
-                /> */}
                 <Controller
                   control={control}
                   name="sellAmount"
@@ -256,14 +251,6 @@ const Exchange = () => {
                 />
               </div>
               <div>
-                {/* <NumberFormat
-                  className="h-16 w-full rounded-xl bg-vanilla1 px-3 text-center text-xl"
-                  value={buyAmount}
-                  decimalScale={2}
-                  onChange={(e) => {
-                    handleInputChange('buy', e.target.value)
-                  }}
-                /> */}
                 <Controller
                   control={control}
                   name="buyAmount"
@@ -324,7 +311,6 @@ const Exchange = () => {
                 loading ? 'opacity-50' : 'hover:bg-blue2'
               }`}
               disabled={loading}
-              // onClick={handleExchange}
             >
               {loading ? <Loader /> : 'Exchange'}
             </button>
