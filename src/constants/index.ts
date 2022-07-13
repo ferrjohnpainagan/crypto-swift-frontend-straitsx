@@ -8,14 +8,14 @@ export const CURRENCIES = [
     image: Sgd,
     stableCoin: 'xSGD',
     color: '#038BF4',
-    conversionFactor: 2000,
+    conversionFactor: 5000,
   },
   {
     currency: 'IDR',
     image: Idr,
     stableCoin: 'xIDR',
     color: '#F7931A',
-    conversionFactor: 102000,
+    conversionFactor: 80000,
   },
 ]
 

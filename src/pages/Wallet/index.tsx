@@ -51,6 +51,7 @@ const Wallet = () => {
   }, [])
 
   const handleGetWalletBalance = async (walletCurrency) => {
+    const exchangeRate = await handleExchangeRate()
     const response = await getCryptoWalletBalance()
     const entries = Object.entries(response)
 
@@ -68,6 +69,14 @@ const Wallet = () => {
             .div(CURRENCIES[i].conversionFactor ** 6)
             .toFixed(2)
             .toString()
+
+          if (symbol !== walletCurrency.stableCoin) {
+            if (symbol === 'xSGD') {
+              amount = parseFloat(amount) * parseFloat(exchangeRate)
+            } else {
+              amount = parseFloat(amount) / parseFloat(exchangeRate)
+            }
+          }
 
           currencies.push(symbol)
           balances.push(amount)
@@ -113,7 +122,8 @@ const Wallet = () => {
       .toFixed(2)
       .toString()
 
-    setExchangeRate(rate)
+    // setExchangeRate(rate)
+    return rate
   }
 
   return (
@@ -122,8 +132,11 @@ const Wallet = () => {
         <div className="my-4 flex flex-col justify-start px-8">
           <div className="font-workSans text-xl">Your Total Balance is</div>
 
-          <div className="mx-3 mt-2 flex font-workSans text-3xl text-blue1">
-            {currencyFormatter.format(totalBalance, { code: 'USD' })}
+          <div className="mt-2 flex font-workSans text-3xl text-blue1">
+            {currencyFormatter.format(totalBalance, {
+              symbol: currency.stableCoin,
+              format: '%v %s',
+            })}
           </div>
 
           <div className="mt-1">
