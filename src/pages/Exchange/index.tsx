@@ -133,7 +133,7 @@ const Exchange = () => {
        * Rate is calculated differently when the buy input is being changed
        * to correctly handle conversion
        */
-      rate = exchangeRate
+      rate = 1 / parseFloat(exchangeRate)
       calculatedAmount =
         parseFloat(input) * parseFloat(rate)
           ? (parseFloat(input) * parseFloat(rate)).toString()
@@ -151,12 +151,12 @@ const Exchange = () => {
     const amount = ethers.utils.formatUnits(amountToWei, 'wei')
     const response = await viewStablecoinSwap(amount)
 
-    setExchangeRate(
-      new BigNumber(response.data.data.rate)
-        .div(10 ** 6)
-        .toFixed(2)
-        .toString(),
-    )
+    const rate = new BigNumber(response.data.data.rate)
+      .div(10 ** 6)
+      .toFixed(2)
+      .toString()
+
+    setExchangeRate(rate)
   }
 
   return (
