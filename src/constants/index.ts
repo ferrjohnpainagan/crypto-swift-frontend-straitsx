@@ -3,8 +3,20 @@ import Idr from 'assets/currencies/idr.svg'
 import Usd from 'assets/currencies/usd.svg'
 
 export const CURRENCIES = [
-  { currency: 'SGD', image: Sgd, stableCoin: 'xSGD', color: '#038BF4' },
-  { currency: 'IDR', image: Idr, stableCoin: 'xIDR', color: '#F7931A' },
+  {
+    currency: 'SGD',
+    image: Sgd,
+    stableCoin: 'xSGD',
+    color: '#038BF4',
+    conversionFactor: 2000,
+  },
+  {
+    currency: 'IDR',
+    image: Idr,
+    stableCoin: 'xIDR',
+    color: '#F7931A',
+    conversionFactor: 102000,
+  },
 ]
 
 export const exchangeValues = {

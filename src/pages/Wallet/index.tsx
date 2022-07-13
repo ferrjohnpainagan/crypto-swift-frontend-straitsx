@@ -4,6 +4,7 @@ import HSBar from 'react-horizontal-stacked-bar-chart'
 import { useXaveAPI } from 'hooks/useXaveAPI'
 import currencyFormatter from 'currency-formatter'
 import BigNumber from 'bignumber.js'
+import { ethers } from 'ethers'
 
 import Card from 'components/Card'
 import PieChart from './PieChart'
@@ -17,6 +18,7 @@ const Wallet = () => {
   const [balanceList, setBalanceList] = useState([])
   const [balanceData, setBalanceData] = useState([])
   const [totalBalance, setTotalBalance] = useState(0)
+  const [exchangeRate, setExchangeRate] = useState('0')
 
   const data = {
     labels: labels,
@@ -42,7 +44,7 @@ const Wallet = () => {
     },
   }
 
-  const { getCryptoWalletBalance } = useXaveAPI()
+  const { getCryptoWalletBalance, viewStablecoinSwap } = useXaveAPI()
 
   useEffect(() => {
     handleGetWalletBalance(CURRENCIES[0])
@@ -60,37 +62,34 @@ const Wallet = () => {
     let color: any
 
     for (const [symbol, balance] of entries) {
-      if (symbol === 'xIDR') {
-        amount = new BigNumber(balance as string)
-          .div(102000 ** 6)
-          .toFixed(2)
-          .toString()
-      } else {
-        amount = new BigNumber(balance as string)
-          .div(2000 ** 6)
-          .toFixed(2)
-          .toString()
-      }
+      for (let i = 0; i < CURRENCIES.length; i++) {
+        if (symbol === CURRENCIES[i].stableCoin) {
+          amount = new BigNumber(balance as string)
+            .div(CURRENCIES[i].conversionFactor ** 6)
+            .toFixed(2)
+            .toString()
 
-      currencies.push(symbol)
-      balances.push(amount)
+          currencies.push(symbol)
+          balances.push(amount)
 
-      CURRENCIES.map((currency) => {
-        if (currency.stableCoin === symbol) {
-          color = currency.color
+          CURRENCIES.map((currency) => {
+            if (currency.stableCoin === symbol) {
+              color = currency.color
+            }
+          })
+
+          totalWalletBalance += parseFloat(amount)
+
+          balanceDataList.push({
+            value: parseFloat(amount),
+            description: `${currencyFormatter.format(amount, {
+              symbol: walletCurrency.stableCoin,
+              format: '%v %s',
+            })}`,
+            color: color,
+          })
         }
-      })
-
-      totalWalletBalance += parseFloat(amount)
-
-      balanceDataList.push({
-        value: parseFloat(amount),
-        description: `${currencyFormatter.format(amount, {
-          symbol: walletCurrency.stableCoin,
-          format: '%v %s',
-        })}`,
-        color: color,
-      })
+      }
     }
 
     setLabels(currencies)
@@ -102,6 +101,19 @@ const Wallet = () => {
   const handleSelectCurrency = (currency) => {
     setCurrency(currency)
     handleGetWalletBalance(currency)
+  }
+
+  const handleExchangeRate = async () => {
+    const amountToWei = ethers.utils.parseUnits('1', 6)
+    const amount = ethers.utils.formatUnits(amountToWei, 'wei')
+    const response = await viewStablecoinSwap(amount)
+
+    const rate = new BigNumber(response.data.data.rate)
+      .div(10 ** 6)
+      .toFixed(2)
+      .toString()
+
+    setExchangeRate(rate)
   }
 
   return (
