@@ -29,11 +29,13 @@ const BankRecipient = () => {
 
   const onSubmit = async (data) => {
     console.log(data)
+
+    handleBankRecipient(data)
   }
 
-  const handleBankRecipient = () => {
+  const handleBankRecipient = (data) => {
     setLoading(true)
-    localStorage.setItem('bankAccountRecipient', accountNumber)
+    localStorage.setItem('bankAccountRecipient', data.accountNumber)
 
     setTimeout(() => {
       navigate('/remit/exchange')
