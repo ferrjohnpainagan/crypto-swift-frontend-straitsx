@@ -107,7 +107,10 @@ const BankRecipient = () => {
                   required: 'Account number is required.',
                   validate: {
                     minLength: (value) =>
-                      !(value.trim().length < 10) ||
+                      !(value.trim().length < 8) ||
+                      'Account number must have 8-16 digits.',
+                    maxLength: (value) =>
+                      !(value.trim().length > 16) ||
                       'Account number must have 8-16 digits.',
                   },
                 }}
