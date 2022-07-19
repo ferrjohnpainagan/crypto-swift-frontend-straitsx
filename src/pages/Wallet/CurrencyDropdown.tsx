@@ -26,7 +26,7 @@ const Dropdown = ({
                 src={selected.image}
                 className="mr-2 h-5 rounded-full shadow-md"
               />
-              {selected.stableCoin}
+              {selected.currency}
             </div>
           )}
           <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
@@ -60,7 +60,7 @@ const Dropdown = ({
                         src={item.image}
                         className="mr-2 h-5 rounded-full shadow-md"
                       />
-                      {item.stableCoin}
+                      {item.currency}
                     </a>
                   )}
                 </Menu.Item>

@@ -54,7 +54,7 @@ const Wallet = () => {
     const exchangeRate = await handleExchangeRate()
     const response = await getCryptoWalletBalance()
     const entries = Object.entries(response)
-
+    console.log(response)
     let currencies: any = []
     let balances: any = []
     let balanceDataList: any = []
@@ -66,7 +66,7 @@ const Wallet = () => {
       for (let i = 0; i < CURRENCIES.length; i++) {
         if (symbol === CURRENCIES[i].stableCoin) {
           amount = new BigNumber(balance as string)
-            .div(CURRENCIES[i].conversionFactor ** 6)
+            .div(CURRENCIES[i].conversionFactor ** 2)
             .toFixed(2)
             .toString()
 
@@ -78,12 +78,12 @@ const Wallet = () => {
             }
           }
 
-          currencies.push(symbol)
           balances.push(amount)
 
           CURRENCIES.map((currency) => {
             if (currency.stableCoin === symbol) {
               color = currency.color
+              currencies.push(CURRENCIES[i].currency)
             }
           })
 
@@ -92,7 +92,7 @@ const Wallet = () => {
           balanceDataList.push({
             value: parseFloat(amount),
             description: `${currencyFormatter.format(amount, {
-              symbol: walletCurrency.stableCoin,
+              symbol: walletCurrency.currency,
               format: '%v %s',
             })}`,
             color: color,
@@ -134,7 +134,7 @@ const Wallet = () => {
 
           <div className="mt-2 flex font-workSans text-3xl text-blue1">
             {currencyFormatter.format(totalBalance, {
-              symbol: currency.stableCoin,
+              symbol: currency.currency,
               format: '%v %s',
             })}
           </div>
