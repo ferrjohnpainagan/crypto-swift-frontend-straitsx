@@ -14,6 +14,8 @@ import Loader from 'components/Loader'
 import Status from 'components/Status'
 import { CURRENCIES } from 'constants/index'
 
+const { REACT_APP_IDR_BALANCE } = process.env
+
 const CashOut = () => {
   const navigate = useNavigate()
   const username = localStorage.getItem('username')
@@ -23,7 +25,7 @@ const CashOut = () => {
   const [currency, setCurrency] = useState<any>(CURRENCIES[1])
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState('pending')
-  const [balance, setBalance] = useState(randomNumberGenerator(3))
+  const [balance, setBalance] = useState(REACT_APP_IDR_BALANCE)
 
   const { processCashOut, getCryptoWalletBalance } = useXaveAPI()
 
