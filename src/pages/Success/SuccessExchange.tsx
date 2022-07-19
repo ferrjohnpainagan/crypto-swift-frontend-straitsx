@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Card from 'components/Card'
 import Arrow from '../../assets/arrow.svg'
-import SuccessExchangeIcon from '../../assets/success-exchange.svg'
+// import SuccessExchangeIcon from '../../assets/success-exchange.svg'
+import SuccessExchangeIcon from 'assets/exchange.png'
 
 const SuccessExchange = () => {
   const location = useLocation()

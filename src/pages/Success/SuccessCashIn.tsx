@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Card from 'components/Card'
 import Arrow from '../../assets/arrow.svg'
-import SuccessCashInIcon from '../../assets/safe 1.svg'
+// import SuccessCashInIcon from '../../assets/safe 1.svg'
+import SuccessCashInIcon from 'assets/cash_in.png'
 
 const SuccessCashIn = () => {
   const location = useLocation()
