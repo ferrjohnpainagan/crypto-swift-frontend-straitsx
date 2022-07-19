@@ -68,6 +68,7 @@ const Wallet = () => {
     for (const [symbol, balance] of entries) {
       for (let i = 0; i < CURRENCIES.length; i++) {
         if (symbol === CURRENCIES[i].stableCoin) {
+          // amount = balance
           amount = new BigNumber(balance as string)
             .div(CURRENCIES[i].conversionFactor ** 2)
             .toFixed(2)
