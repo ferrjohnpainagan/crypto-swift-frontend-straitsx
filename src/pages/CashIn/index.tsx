@@ -5,8 +5,8 @@ import { useForm, Controller } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import NumberFormat from 'react-number-format'
 import { useXaveAPI } from 'hooks/useXaveAPI'
-import { isInputZero } from 'utils/inputValidations'
-import { randomCodeGenerator } from 'utils/codeGenerator'
+import { isInputZero, isBalanceEnough } from 'utils/inputValidations'
+import { randomCodeGenerator, randomNumberGenerator } from 'utils/codeGenerator'
 import { CashInSubmitInterface } from 'interfaces'
 
 import Dropdown from 'components/Dropdown'
@@ -26,7 +26,7 @@ const CashIn = () => {
   const [amount, setAmount] = useState('0.0')
   const [currency, setCurrency] = useState<any>(CURRENCIES[0])
   const [status, setStatus] = useState('pending')
-  const [balance, setBalance] = useState(200)
+  const [balance, setBalance] = useState(randomNumberGenerator(3))
 
   useEffect(() => {
     if (isLoggedIn == 'true') return
@@ -46,7 +46,7 @@ const CashIn = () => {
 
   const onSubmit = async (data: CashInSubmitInterface) => {
     console.log(data)
-    await handleCashIn(data)
+    // await handleCashIn(data)
   }
 
   const handleCashIn = async (data: CashInSubmitInterface) => {
@@ -126,6 +126,9 @@ const CashIn = () => {
                     validate: {
                       zeroValueInput: (value) =>
                         !isInputZero(value) || 'Amount cannot be zero.',
+                      isBalanceEnough: (value) =>
+                        isBalanceEnough(balance, value) ||
+                        "You don't have enough balance.",
                     },
                   }}
                   render={({ field }) => (
