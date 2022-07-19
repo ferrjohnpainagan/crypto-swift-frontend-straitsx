@@ -4,8 +4,8 @@ import NumberFormat from 'react-number-format'
 import { useForm, Controller } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { useXaveAPI } from 'hooks/useXaveAPI'
-import { randomCodeGenerator } from 'utils/codeGenerator'
-import { isInputZero } from 'utils/inputValidations'
+import { randomCodeGenerator, randomNumberGenerator } from 'utils/codeGenerator'
+import { isInputZero, isBalanceEnough } from 'utils/inputValidations'
 import BigNumber from 'bignumber.js'
 
 import Card from 'components/Card'
@@ -23,6 +23,7 @@ const CashOut = () => {
   const [currency, setCurrency] = useState<any>(CURRENCIES[1])
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState('pending')
+  const [balance, setBalance] = useState(randomNumberGenerator(3))
 
   const { processCashOut, getCryptoWalletBalance } = useXaveAPI()
 
@@ -42,32 +43,34 @@ const CashOut = () => {
 
   const onSubmit = async (data) => {
     setLoading(true)
-    const response = await isBalanceEnough(data.amount)
+    await handleCashOut(data)
+    // const response = await isBalanceEnough(data.amount)
 
-    if (response) {
-      await handleCashOut(data)
-    } else {
-      setLoading(false)
-      setError('amount', {
-        type: 'error',
-        message: "You don't have enough balance.",
-      })
-    }
+    // if (response) {
+    //   await handleCashOut(data)
+    // } else {
+    //   setLoading(false)
+    //   setError('amount', {
+    //     type: 'error',
+    //     message: "You don't have enough balance.",
+    //   })
+    // }
   }
 
-  const isBalanceEnough = async (amount: string) => {
-    const response = await getCryptoWalletBalance()
-    const balanceObject = response
+  //** Won't be used for mock testing */
+  // const isBalanceEnough = async (amount: string) => {
+  //   const response = await getCryptoWalletBalance()
+  //   const balanceObject = response
 
-    let walletBalance
-    for (const [key, value] of Object.entries(balanceObject)) {
-      if (key === currency.stableCoin) {
-        walletBalance = new BigNumber(value as string).toFixed(2)
-      }
-    }
+  //   let walletBalance
+  //   for (const [key, value] of Object.entries(balanceObject)) {
+  //     if (key === currency.stableCoin) {
+  //       walletBalance = new BigNumber(value as string).toFixed(2)
+  //     }
+  //   }
 
-    return parseFloat(walletBalance) > parseFloat(amount)
-  }
+  //   return parseFloat(walletBalance) > parseFloat(amount)
+  // }
 
   const handleCashOut = async (data) => {
     const cashOutAmount = data.amount
@@ -121,7 +124,10 @@ const CashOut = () => {
             <div className="text-md font-workSans font-semibold text-black1">
               Amount
             </div>
-            <div className="flex justify-between rounded-lg bg-vanilla1 p-3 align-bottom">
+            <div className="flex flex-col justify-between rounded-lg bg-vanilla1 p-3 align-bottom">
+              <div className="font-workSans text-xs">
+                BALANCE: {balance} {currency.currency}{' '}
+              </div>
               <Controller
                 control={control}
                 name="amount"
@@ -138,6 +144,9 @@ const CashOut = () => {
                   validate: {
                     zeroValueInput: (value) =>
                       !isInputZero(value) || 'Amount cannot be zero.',
+                    isBalanceEnough: (value) =>
+                      isBalanceEnough(balance, value) ||
+                      "You don't have enough balance.",
                   },
                 }}
                 render={({ field }) => (
