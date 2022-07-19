@@ -3,7 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import Card from 'components/Card'
 import ArrowRight from '../../assets/arrow-right.svg'
-import SuccessCashOutIcon from '../../assets/success-cash-out.svg'
+// import SuccessCashOutIcon from '../../assets/success-cash-out.svg'
+import SuccessCashOutIcon from 'assets/cash_out.png'
+
 const SuccessCashOut = () => {
   const location = useLocation()
   const navigate = useNavigate()
