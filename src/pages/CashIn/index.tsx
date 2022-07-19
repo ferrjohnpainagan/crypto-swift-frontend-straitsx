@@ -15,6 +15,8 @@ import { CURRENCIES } from 'constants/index'
 import Loader from 'components/Loader'
 import Status from 'components/Status'
 
+const { REACT_APP_SGD_BALANCE } = process.env
+
 const CashIn = () => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -26,7 +28,7 @@ const CashIn = () => {
   const [amount, setAmount] = useState('0.0')
   const [currency, setCurrency] = useState<any>(CURRENCIES[0])
   const [status, setStatus] = useState('pending')
-  const [balance, setBalance] = useState(randomNumberGenerator(3))
+  const [balance, setBalance] = useState(REACT_APP_SGD_BALANCE)
 
   useEffect(() => {
     if (isLoggedIn == 'true') return
