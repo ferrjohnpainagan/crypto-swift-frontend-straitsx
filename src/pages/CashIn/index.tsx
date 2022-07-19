@@ -46,7 +46,7 @@ const CashIn = () => {
 
   const onSubmit = async (data: CashInSubmitInterface) => {
     console.log(data)
-    // await handleCashIn(data)
+    await handleCashIn(data)
   }
 
   const handleCashIn = async (data: CashInSubmitInterface) => {
