@@ -10,6 +10,7 @@ import Card from 'components/Card'
 import PieChart from './PieChart'
 import CurrencyDropdown from './CurrencyDropdown'
 import { CURRENCIES } from 'constants/index'
+import Loader from 'components/Loader'
 
 const Wallet = () => {
   const navigate = useNavigate()
@@ -19,6 +20,7 @@ const Wallet = () => {
   const [balanceData, setBalanceData] = useState([])
   const [totalBalance, setTotalBalance] = useState(0)
   const [exchangeRate, setExchangeRate] = useState('0')
+  const [loading, setLoading] = useState(false)
 
   const data = {
     labels: labels,
@@ -51,6 +53,7 @@ const Wallet = () => {
   }, [])
 
   const handleGetWalletBalance = async (walletCurrency) => {
+    setLoading(true)
     const exchangeRate = await handleExchangeRate()
     const response = await getCryptoWalletBalance()
     const entries = Object.entries(response)
@@ -105,6 +108,7 @@ const Wallet = () => {
     setBalanceList(balances)
     setBalanceData(balanceDataList)
     setTotalBalance(totalWalletBalance)
+    setLoading(false)
   }
 
   const handleSelectCurrency = (currency) => {
@@ -128,42 +132,65 @@ const Wallet = () => {
 
   return (
     <Card width={'50vw'}>
-      <div className="flex justify-center">
-        <div className="my-4 flex flex-col justify-start px-8">
-          <div className="font-workSans text-xl">Your Total Balance is</div>
+      <div style={{ height: '550px' }}>
+        <div className="flex justify-center">
+          <div className="my-4 flex flex-col justify-start px-8">
+            <div className="font-workSans text-xl">Your Total Balance is</div>
 
-          <div className="mt-2 flex font-workSans text-3xl text-blue1">
-            {currencyFormatter.format(totalBalance, {
-              symbol: currency.currency,
-              format: '%v %s',
-            })}
+            <div className="mt-2 flex font-workSans text-3xl text-blue1">
+              {loading ? (
+                <div className="text-black">
+                  <Loader />
+                </div>
+              ) : (
+                currencyFormatter.format(totalBalance, {
+                  symbol: currency.currency,
+                  format: '%v %s',
+                })
+              )}
+            </div>
+
+            <div className="mt-1">
+              <CurrencyDropdown
+                name={currency}
+                options={CURRENCIES}
+                selected={currency}
+                setSelected={handleSelectCurrency}
+              />
+            </div>
           </div>
-
-          <div className="mt-1">
-            <CurrencyDropdown
-              name={currency}
-              options={CURRENCIES}
-              selected={currency}
-              setSelected={handleSelectCurrency}
-            />
+          <div>
+            {loading ? (
+              <div
+                style={{ width: '300px', height: '300px' }}
+                className="flex items-center justify-center"
+              >
+                <Loader />
+              </div>
+            ) : (
+              <PieChart data={data} options={options} />
+            )}
           </div>
         </div>
-        <div>
-          <PieChart data={data} options={options} />
+        <div className="px-6 pb-6">
+          {loading ? (
+            <div className="flex justify-center">
+              <Loader />
+            </div>
+          ) : (
+            <HSBar showTextDown={true} id="hsbarExample" data={balanceData} />
+          )}
         </div>
-      </div>
-      <div className="px-6 pb-6">
-        <HSBar showTextDown={true} id="hsbarExample" data={balanceData} />
-      </div>
-      <div className="flex justify-center pb-8">
-        <button
-          style={{ width: '20vw' }}
-          type="button"
-          className={`mt-6 flex w-full justify-center rounded-lg bg-blue1 py-3 font-workSans font-medium text-white hover:bg-blue2`}
-          onClick={() => navigate('/remit/cash-in')}
-        >
-          Remit
-        </button>
+        <div className="flex justify-center pb-8">
+          <button
+            style={{ width: '20vw' }}
+            type="button"
+            className={`mt-6 flex w-full justify-center rounded-lg bg-blue1 py-3 font-workSans font-medium text-white hover:bg-blue2`}
+            onClick={() => navigate('/remit/cash-in')}
+          >
+            Remit
+          </button>
+        </div>
       </div>
     </Card>
   )
