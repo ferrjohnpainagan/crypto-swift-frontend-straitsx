@@ -21,6 +21,10 @@ const Wallet = () => {
   const [totalBalance, setTotalBalance] = useState(0)
   const [exchangeRate, setExchangeRate] = useState('0')
   const [loading, setLoading] = useState(false)
+  const [usdRate, setUsdRate] = useState({
+    sgd: 1.39,
+    idr: 15044.3,
+  })
 
   const data = {
     labels: labels,
@@ -54,7 +58,7 @@ const Wallet = () => {
 
   const handleGetWalletBalance = async (walletCurrency) => {
     setLoading(true)
-    const exchangeRate = await handleExchangeRate()
+    // const exchangeRate = await handleExchangeRate()
     const response = await getCryptoWalletBalance()
     const entries = Object.entries(response)
     console.log(response)
@@ -68,18 +72,24 @@ const Wallet = () => {
     for (const [symbol, balance] of entries) {
       for (let i = 0; i < CURRENCIES.length; i++) {
         if (symbol === CURRENCIES[i].stableCoin) {
-          // amount = balance
-          amount = new BigNumber(balance as string)
-            .div(CURRENCIES[i].conversionFactor ** 2)
-            .toFixed(2)
-            .toString()
+          // amount = new BigNumber(balance as string)
+          //   .div(CURRENCIES[i].conversionFactor ** 2)
+          //   .toFixed(2)
+          //   .toString()
+          amount = new BigNumber(balance as string).div(10 ** 6).toString()
 
-          if (symbol !== walletCurrency.stableCoin) {
-            if (symbol === 'xSGD') {
-              amount = parseFloat(amount) * parseFloat(exchangeRate)
-            } else {
-              amount = parseFloat(amount) / parseFloat(exchangeRate)
-            }
+          // if (symbol !== walletCurrency.stableCoin) {
+          //   if (symbol === 'xSGD') {
+          //     amount = parseFloat(amount) * parseFloat(exchangeRate)
+          //   } else {
+          //     amount = parseFloat(amount) / parseFloat(exchangeRate)
+          //   }
+          // }
+
+          if (symbol === 'xSGD') {
+            amount = parseFloat(amount) * usdRate.sgd
+          } else {
+            amount = parseFloat(amount) / usdRate.idr
           }
 
           balances.push(amount)
@@ -96,7 +106,7 @@ const Wallet = () => {
           balanceDataList.push({
             value: parseFloat(amount),
             description: `${currencyFormatter.format(amount, {
-              symbol: walletCurrency.currency,
+              symbol: CURRENCIES[i].currency,
               format: '%v %s',
             })}`,
             color: color,
@@ -145,19 +155,19 @@ const Wallet = () => {
                 </div>
               ) : (
                 currencyFormatter.format(totalBalance, {
-                  symbol: currency.currency,
+                  symbol: 'USD',
                   format: '%v %s',
                 })
               )}
             </div>
 
             <div className="mt-1">
-              <CurrencyDropdown
+              {/* <CurrencyDropdown
                 name={currency}
                 options={CURRENCIES}
                 selected={currency}
                 setSelected={handleSelectCurrency}
-              />
+              /> */}
             </div>
           </div>
           <div>
