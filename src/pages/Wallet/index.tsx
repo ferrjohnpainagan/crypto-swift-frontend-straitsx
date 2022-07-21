@@ -58,7 +58,7 @@ const Wallet = () => {
 
   const handleGetWalletBalance = async (walletCurrency) => {
     setLoading(true)
-    const exchangeRate = await handleExchangeRate()
+    // const exchangeRate = await handleExchangeRate()
     const response = await getCryptoWalletBalance()
     const entries = Object.entries(response)
     console.log(response)
