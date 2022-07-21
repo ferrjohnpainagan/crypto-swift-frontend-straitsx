@@ -122,6 +122,7 @@ const CashIn = () => {
   useEffect(() => {
     handleGetWalletBalance(CURRENCIES[0].stableCoin)
   }, [])
+
   return (
     <Card width={'35vw'}>
       <div className="flex h-16 w-full items-center border-b pl-8">
@@ -164,8 +165,10 @@ const CashIn = () => {
                       zeroValueInput: (value) =>
                         !isInputZero(value) || 'Amount cannot be zero.',
                       isBalanceEnough: (value) =>
-                        isBalanceEnough(balance, value) ||
-                        "You don't have enough balance.",
+                        isBalanceEnough(
+                          currencyFormatter.unformat(balance, {}),
+                          value,
+                        ) || "You don't have enough balance.",
                     },
                   }}
                   render={({ field }) => (

@@ -3,6 +3,5 @@ export const isInputZero = (input: string) => {
 }
 
 export const isBalanceEnough = (balance, inputValue) => {
-  console.log(balance > parseFloat(inputValue))
-  return balance >= parseFloat(inputValue)
+  return parseFloat(balance) >= parseFloat(inputValue)
 }

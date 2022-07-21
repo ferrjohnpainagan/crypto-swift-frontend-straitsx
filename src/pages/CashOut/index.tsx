@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import NumberFormat from 'react-number-format'
 import { useForm, Controller } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
+import currencyFormatter from 'currency-formatter'
 import { useXaveAPI } from 'hooks/useXaveAPI'
 import { randomCodeGenerator, randomNumberGenerator } from 'utils/codeGenerator'
 import { isInputZero, isBalanceEnough } from 'utils/inputValidations'
@@ -22,10 +23,11 @@ const CashOut = () => {
   const customerId = localStorage.getItem('customerId')
   const accountNumber = localStorage.getItem('accountNumber')
   const isLoggedIn = localStorage.getItem('isLoggedIn')
-  const [currency, setCurrency] = useState<any>(CURRENCIES[1])
+  const [currency, setCurrency] = useState<any>(CURRENCIES[0])
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState('pending')
-  const [balance, setBalance] = useState(REACT_APP_IDR_BALANCE)
+  const [balance, setBalance] = useState<any>('')
+  const [balancesObject, setBalancesObject] = useState<any>([])
 
   const { processCashOut, getCryptoWalletBalance } = useXaveAPI()
 
@@ -106,6 +108,40 @@ const CashOut = () => {
     }
   }
 
+  const handleSelectCurrency = (currency) => {
+    setCurrency(currency)
+    if (currency.currency === 'SGD') {
+      setBalance(balancesObject.xSGD)
+    } else if (currency.currency === 'IDR') {
+      setBalance(balancesObject.xIDR)
+    }
+  }
+
+  const handleGetWalletBalance = async (inputCurrency) => {
+    const response = await getCryptoWalletBalance()
+    const entries = Object.entries(response)
+
+    let balances = {} as any
+    let amount
+    for (const [symbol, balance] of entries) {
+      amount = new BigNumber(balance as string)
+        .div(10 ** 6)
+        .toFixed(2)
+        .toString()
+      balances = { ...balances, [symbol]: currencyFormatter.format(amount, {}) }
+
+      if (inputCurrency === symbol) {
+        setBalance(currencyFormatter.format(amount, {}))
+      }
+    }
+
+    setBalancesObject(balances)
+  }
+
+  useEffect(() => {
+    handleGetWalletBalance(CURRENCIES[0].stableCoin)
+  }, [])
+
   return (
     <Card width={'35vw'}>
       <div className="flex h-16 w-full items-center border-b pl-8">
@@ -119,7 +155,7 @@ const CashOut = () => {
               name={'Select'}
               options={CURRENCIES}
               selected={currency}
-              setSelected={setCurrency}
+              setSelected={handleSelectCurrency}
             />
           </div>
           <div style={{ width: '18vw' }}>
@@ -147,8 +183,10 @@ const CashOut = () => {
                     zeroValueInput: (value) =>
                       !isInputZero(value) || 'Amount cannot be zero.',
                     isBalanceEnough: (value) =>
-                      isBalanceEnough(balance, value) ||
-                      "You don't have enough balance.",
+                      isBalanceEnough(
+                        currencyFormatter.unformat(balance, {}),
+                        value,
+                      ) || "You don't have enough balance.",
                   },
                 }}
                 render={({ field }) => (
