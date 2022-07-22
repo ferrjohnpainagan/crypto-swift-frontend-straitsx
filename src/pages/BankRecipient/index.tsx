@@ -48,13 +48,19 @@ const BankRecipient = () => {
   }
 
   const autoPopulateRecipient = () => {
-    setValue('accountName', 'John Doe')
+    setValue('accountName', 'Kemal Hutapea')
     setValue(
       'accountNumber',
-      (Math.floor(Math.random() * 9000000000) + 1000000000).toString(),
+      // (Math.floor(Math.random() * 9000000000) + 1000000000).toString(),
+      '4556176004159289',
     )
     randomSwiftCodeGenerator()
   }
+
+  const handleLengthValidation = (value) => {
+    return value.trim().length >= 8 && value.trim().length <= 16
+  }
+
   return (
     <div
       style={{ width: '50vw' }}
@@ -106,12 +112,9 @@ const BankRecipient = () => {
                 rules={{
                   required: 'Account number is required.',
                   validate: {
-                    minLength: (value) =>
-                      !(value.trim().length < 8) ||
-                      'Account number must have 8-16 digits.',
                     maxLength: (value) =>
-                      !(value.trim().length > 16) ||
-                      'Account number must have 8-16 digits.',
+                      handleLengthValidation(value) ||
+                      'Account number must only have 8-16 digits.',
                   },
                 }}
                 render={({ field }) => (
