@@ -108,8 +108,8 @@ const Wallet = () => {
             description:
               symbol === 'xIDR'
                 ? `${currencyFormatter.format(
-                    parseFloat(
-                      new BigNumber(balance as string).div(10 ** 9).toString(),
+                    parseInt(
+                      new BigNumber(balance as string).div(10 ** 7).toString(),
                     ),
                     {
                       symbol: `K ${CURRENCIES[i].currency}`,
