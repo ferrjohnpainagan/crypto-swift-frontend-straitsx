@@ -48,10 +48,11 @@ const BankRecipient = () => {
   }
 
   const autoPopulateRecipient = () => {
-    setValue('accountName', 'John Doe')
+    setValue('accountName', 'Kemal Hutapea')
     setValue(
       'accountNumber',
-      (Math.floor(Math.random() * 9000000000) + 1000000000).toString(),
+      // (Math.floor(Math.random() * 9000000000) + 1000000000).toString(),
+      '4556 1760 0415 9289',
     )
     randomSwiftCodeGenerator()
   }
