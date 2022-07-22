@@ -69,7 +69,7 @@ const Wallet = () => {
     let amount: any
     let color: any
 
-    for (const [symbol, balance] of entries) {
+    for (const [symbol, balance] of entries as any) {
       for (let i = 0; i < CURRENCIES.length; i++) {
         if (symbol === CURRENCIES[i].stableCoin) {
           // amount = new BigNumber(balance as string)
@@ -87,7 +87,7 @@ const Wallet = () => {
           // }
 
           if (symbol === 'xSGD') {
-            amount = parseFloat(amount) * usdRate.sgd
+            amount = parseFloat(amount) / usdRate.sgd
           } else {
             amount = parseFloat(amount) / usdRate.idr
           }
@@ -105,10 +105,27 @@ const Wallet = () => {
 
           balanceDataList.push({
             value: parseFloat(amount),
-            description: `${currencyFormatter.format(amount, {
-              symbol: CURRENCIES[i].currency,
-              format: '%v %s',
-            })}`,
+            description:
+              symbol === 'xIDR'
+                ? `${currencyFormatter.format(
+                    parseInt(
+                      new BigNumber(balance as string).div(10 ** 7).toString(),
+                    ),
+                    {
+                      symbol: `K ${CURRENCIES[i].currency}`,
+                      format: '%v %s',
+                    },
+                  )}`
+                : `${currencyFormatter.format(
+                    parseFloat(
+                      new BigNumber(balance as string).div(10 ** 6).toString(),
+                    ),
+                    {
+                      symbol: CURRENCIES[i].currency,
+                      format: '%v %s',
+                    },
+                  )}`,
+
             color: color,
           })
         }
