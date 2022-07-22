@@ -97,8 +97,10 @@ const Exchange = () => {
         setTimeout(() => {
           navigate('/remit/success/exchange', {
             state: {
-              sell: `${sellAmount} ${sell.stableCoin}`,
-              buy: `${buyAmount} ${buy.stableCoin}`,
+              sellAmount: sellAmount,
+              sellCurrency: sell.stableCoin,
+              buyAmount: buyAmount,
+              buyCurrency: buy.stableCoin,
               txHash: txHash,
             },
           })

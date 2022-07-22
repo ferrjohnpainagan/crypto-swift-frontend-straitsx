@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import currencyFormatter from 'currency-formatter'
+
 import Card from 'components/Card'
 import Arrow from '../../assets/arrow.svg'
 // import SuccessCashInIcon from '../../assets/safe 1.svg'
@@ -34,7 +36,12 @@ const SuccessCashIn = () => {
           </a>
         </div>
         <div className="py-1 font-workSans text-sm">
-          Cash-in exactly {amount} {currency?.currency}
+          Cash-in exactly{' '}
+          {currencyFormatter.format(amount, {
+            symbol: currency?.currency,
+            format: '%v %s',
+          })}
+          {/* {amount} {currency?.currency} */}
         </div>
         {/* <div className="py-1 font-workSans text-blue1 underline hover:cursor-pointer">
           View on Explorer

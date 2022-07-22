@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import currencyFormatter from 'currency-formatter'
 
 import Card from 'components/Card'
 import ArrowRight from '../../assets/arrow-right.svg'
@@ -47,7 +48,7 @@ const SuccessCashOut = () => {
 
           <div>
             <a className="font-roboto text-2xl font-semibold text-blue1">
-              {amount}
+              {currencyFormatter.unformat(amount, {})}
             </a>
             <a className="pl-2 font-workSans text-base text-black1">
               {currency?.currency}

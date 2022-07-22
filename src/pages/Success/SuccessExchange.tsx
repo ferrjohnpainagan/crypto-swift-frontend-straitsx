@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import currencyFormatter from 'currency-formatter'
+
 import Card from 'components/Card'
 import Arrow from '../../assets/arrow.svg'
 // import SuccessExchangeIcon from '../../assets/success-exchange.svg'
@@ -16,7 +18,7 @@ const SuccessExchange = () => {
     }
   }, [])
 
-  const { sell, buy, txHash } = pathState
+  const { sellAmount, sellCurrency, buyAmount, buyCurrency, txHash } = pathState
 
   return (
     <Card width={'30vw'}>
@@ -27,8 +29,17 @@ const SuccessExchange = () => {
         <div className="py-2 font-workSans text-xl font-semibold text-blue1">
           Exchange Successful
         </div>
-        <div className="py-1 font-workSans text-sm">
-          Exchanged exactly {sell} for {buy}
+        <div className="py-1 text-center font-workSans text-sm">
+          Exchanged exactly{' '}
+          {currencyFormatter.format(sellAmount, {
+            symbol: sellCurrency,
+            format: '%v %s',
+          })}{' '}
+          for{' '}
+          {currencyFormatter.format(buyAmount, {
+            symbol: buyCurrency,
+            format: '%v %s',
+          })}
         </div>
         <div
           className="py-1 font-workSans text-blue1 underline hover:cursor-pointer"

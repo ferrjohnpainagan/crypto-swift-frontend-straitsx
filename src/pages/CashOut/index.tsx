@@ -41,6 +41,7 @@ const CashOut = () => {
     control,
     formState: { errors },
     setError,
+    setValue,
   } = useForm({
     criteriaMode: 'all',
   })
@@ -108,6 +109,10 @@ const CashOut = () => {
     }
   }
 
+  const handleMax = () => {
+    setValue('amount', balance)
+  }
+
   const handleSelectCurrency = (currency) => {
     setCurrency(currency)
     if (currency.currency === 'SGD') {
@@ -162,41 +167,52 @@ const CashOut = () => {
             <div className="text-md font-workSans font-semibold text-black1">
               Amount
             </div>
-            <div className="flex flex-col justify-between rounded-lg bg-vanilla1 p-3 align-bottom">
-              <div className="font-workSans text-xs">
-                BALANCE: {balance} {currency.currency}{' '}
+            <div className="flex justify-between rounded-lg bg-vanilla1 p-3 align-bottom">
+              <div className="flex flex-col">
+                <div className="font-workSans text-xs">
+                  BALANCE: {balance} {currency.currency}{' '}
+                </div>
+                <Controller
+                  control={control}
+                  name="amount"
+                  rules={{
+                    required: 'Amount is required.',
+                    pattern: {
+                      value: /^[0-9.]*$/,
+                      message: 'Amount cannot be a negative value.',
+                    },
+                    min: {
+                      value: 1,
+                      message: 'Minimum amount is 1.',
+                    },
+                    validate: {
+                      zeroValueInput: (value) =>
+                        !isInputZero(value) || 'Amount cannot be zero.',
+                      isBalanceEnough: (value) =>
+                        isBalanceEnough(
+                          currencyFormatter.unformat(balance, {}),
+                          value,
+                        ) || "You don't have enough balance.",
+                    },
+                  }}
+                  render={({ field }) => (
+                    <NumberFormat
+                      {...field}
+                      decimalScale={2}
+                      className="align-end mt-4 flex w-full border-none border-transparent bg-transparent font-roboto text-2xl focus:outline-none"
+                    />
+                  )}
+                />
               </div>
-              <Controller
-                control={control}
-                name="amount"
-                rules={{
-                  required: 'Amount is required.',
-                  pattern: {
-                    value: /^[0-9.]*$/,
-                    message: 'Amount cannot be a negative value.',
-                  },
-                  min: {
-                    value: 1,
-                    message: 'Minimum amount is 1.',
-                  },
-                  validate: {
-                    zeroValueInput: (value) =>
-                      !isInputZero(value) || 'Amount cannot be zero.',
-                    isBalanceEnough: (value) =>
-                      isBalanceEnough(
-                        currencyFormatter.unformat(balance, {}),
-                        value,
-                      ) || "You don't have enough balance.",
-                  },
-                }}
-                render={({ field }) => (
-                  <NumberFormat
-                    {...field}
-                    decimalScale={2}
-                    className="align-end mt-4 flex w-full border-none border-transparent bg-transparent font-roboto text-2xl focus:outline-none"
-                  />
-                )}
-              />
+              <div className="flex self-end">
+                <button
+                  type="button"
+                  className="rounded-xl border border-blue1 p-1 text-xs text-blue1"
+                  onClick={handleMax}
+                >
+                  MAX
+                </button>
+              </div>
             </div>
             <div className="mt-2 h-8">
               <ErrorMessage
