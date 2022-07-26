@@ -20,6 +20,8 @@ import Status from 'components/Status'
 import Loader from 'components/Loader'
 
 const Exchange = () => {
+  let count = 0
+  const THRESHOLD = 5
   const isLoggedIn = localStorage.getItem('isLoggedIn')
   const [sell, setSell] = useState({ stableCoin: 'xSGD' })
   const [buy, setBuy] = useState({ stableCoin: 'xIDR' })
@@ -87,29 +89,45 @@ const Exchange = () => {
 
     const amountToWei = ethers.utils.parseUnits(sellAmount, 6)
     const amount = ethers.utils.formatUnits(amountToWei, 'wei')
+    /**
+     * TODO
+     * implement retry on provider related error
+     */
 
-    try {
-      const response = await processExchange(Number(amount))
-      const txHash = `https://polygonscan.com/tx/${response.data.data.transactionHash}`
-
-      if (response.status === 200) {
-        setStatus('success')
-        setTimeout(() => {
-          navigate('/remit/success/exchange', {
-            state: {
-              sellAmount: sellAmount,
-              sellCurrency: sell.stableCoin,
-              buyAmount: buyAmount,
-              buyCurrency: buy.stableCoin,
-              txHash: txHash,
-            },
-          })
-        }, 1000)
-      }
-      console.log(response)
-    } catch (error) {
+    if (count > THRESHOLD) {
       setLoading(false)
-      console.log(error)
+      setError('sellAmount', {
+        type: 'error',
+        message: 'Internal provider error. Please try again later',
+      })
+    } else {
+      try {
+        count += 1
+
+        const response = await processExchange(Number(amount))
+        const txHash = `https://polygonscan.com/tx/${response.data.data.transactionHash}`
+
+        if (response.status === 200) {
+          setStatus('success')
+          setTimeout(() => {
+            navigate('/remit/success/exchange', {
+              state: {
+                sellAmount: sellAmount,
+                sellCurrency: sell.stableCoin,
+                buyAmount: buyAmount,
+                buyCurrency: buy.stableCoin,
+                txHash: txHash,
+              },
+            })
+          }, 1000)
+        }
+        console.log(response)
+      } catch (error) {
+        count += 1
+        console.log('retry')
+        await handleExchange(data)
+        console.log(error)
+      }
     }
   }
 
