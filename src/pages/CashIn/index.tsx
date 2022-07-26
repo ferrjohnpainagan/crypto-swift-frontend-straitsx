@@ -7,6 +7,7 @@ import NumberFormat from 'react-number-format'
 import BigNumber from 'bignumber.js'
 import currencyFormatter from 'currency-formatter'
 import { useXaveAPI } from 'hooks/useXaveAPI'
+import { useStraitsAPI } from 'hooks/useStraitsAPI'
 import { isInputZero, isBalanceEnough } from 'utils/inputValidations'
 import { randomCodeGenerator, randomNumberGenerator } from 'utils/codeGenerator'
 import { CashInSubmitInterface } from 'interfaces'
@@ -38,7 +39,8 @@ const CashIn = () => {
     navigate('/remit/bank-login')
   }, [])
 
-  const { processCashIn, getCryptoWalletBalance } = useXaveAPI()
+  const { getCryptoWalletBalance } = useXaveAPI()
+  const { processCashIn } = useStraitsAPI()
 
   const {
     handleSubmit,
@@ -59,14 +61,14 @@ const CashIn = () => {
     setAmount(data.amount)
     try {
       const response = await processCashIn({
-        username: username,
+        sourceAccountHolderName: username,
         customerId: customerId,
-        bankAccountNumber: accountNumber,
+        destBankAccountNumber: accountNumber,
         amount: data.amount,
       })
 
       const transactionId = randomCodeGenerator(6)
-
+      console.log(response)
       if (response.status === 200) {
         setStatus('success')
         setTimeout(() => {
