@@ -5,6 +5,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import currencyFormatter from 'currency-formatter'
 import { useXaveAPI } from 'hooks/useXaveAPI'
+import { useStraitsAPI } from 'hooks/useStraitsAPI'
 import { randomCodeGenerator, randomNumberGenerator } from 'utils/codeGenerator'
 import { isInputZero, isBalanceEnough } from 'utils/inputValidations'
 import BigNumber from 'bignumber.js'
@@ -21,7 +22,7 @@ const CashOut = () => {
   const navigate = useNavigate()
   const username = localStorage.getItem('username')
   const customerId = localStorage.getItem('customerId')
-  const accountNumber = localStorage.getItem('accountNumber')
+  const accountNumber = localStorage.getItem('bankAccountRecipient')
   const isLoggedIn = localStorage.getItem('isLoggedIn')
   const [currency, setCurrency] = useState<any>(CURRENCIES[0])
   const [loading, setLoading] = useState(false)
@@ -29,7 +30,8 @@ const CashOut = () => {
   const [balance, setBalance] = useState<any>('')
   const [balancesObject, setBalancesObject] = useState<any>([])
 
-  const { processCashOut, getCryptoWalletBalance } = useXaveAPI()
+  const { getCryptoWalletBalance } = useXaveAPI()
+  const { processCashOut } = useStraitsAPI()
 
   useEffect(() => {
     if (isLoggedIn == 'true') return
@@ -83,14 +85,15 @@ const CashOut = () => {
 
     try {
       const response = await processCashOut({
-        username: username,
-        customerId: customerId,
-        bankAccountNumber: accountNumber,
+        // username: username,
+        customerProfileId:
+          'customer_profile_83d91c19-9d38-4cbc-baa2-6c4bafd67d42',
+        bankAccountNumber: '9122234441',
         amount: data.amount,
       })
 
       const transactionId = randomCodeGenerator(6)
-
+      console.log(response)
       if (response.status === 200) {
         setStatus('success')
 
