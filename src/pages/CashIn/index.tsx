@@ -39,8 +39,7 @@ const CashIn = () => {
     navigate('/remit/bank-login')
   }, [])
 
-  const { getCryptoWalletBalance } = useXaveAPI()
-  const { processCashIn } = useStraitsAPI()
+  const { processCashIn, getCryptoWalletBalance } = useXaveAPI()
 
   const {
     handleSubmit,
@@ -61,9 +60,9 @@ const CashIn = () => {
     setAmount(data.amount)
     try {
       const response = await processCashIn({
-        sourceAccountHolderName: username,
+        username: username,
         customerId: customerId,
-        destBankAccountNumber: accountNumber,
+        bankAccountNumber: accountNumber,
         amount: data.amount,
       })
 

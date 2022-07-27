@@ -21,7 +21,8 @@ const { REACT_APP_IDR_BALANCE } = process.env
 const CashOut = () => {
   const navigate = useNavigate()
   const username = localStorage.getItem('username')
-  const customerId = localStorage.getItem('customerId')
+  // const customerId = localStorage.getItem('customerId')
+  const customerId = 'customer_profile_e0709472-086a-475d-9b00-aea5ac3c45e7'
   const accountNumber = localStorage.getItem('bankAccountRecipient')
   const isLoggedIn = localStorage.getItem('isLoggedIn')
   const exchangeBalance: any = localStorage.getItem('exchangeBalance')
@@ -31,8 +32,7 @@ const CashOut = () => {
   const [balance, setBalance] = useState<any>('')
   const [balancesObject, setBalancesObject] = useState<any>([])
 
-  const { getCryptoWalletBalance } = useXaveAPI()
-  const { processCashOut } = useStraitsAPI()
+  const { processCashOut, getCryptoWalletBalance } = useXaveAPI()
 
   useEffect(() => {
     if (isLoggedIn == 'true') return
@@ -86,10 +86,9 @@ const CashOut = () => {
 
     try {
       const response = await processCashOut({
-        // username: username,
-        customerProfileId:
-          'customer_profile_83d91c19-9d38-4cbc-baa2-6c4bafd67d42',
-        bankAccountNumber: '9122234441',
+        username: username,
+        customerId: customerId,
+        bankAccountNumber: accountNumber,
         amount: data.amount,
       })
 
