@@ -50,9 +50,22 @@ const Exchange = () => {
     setValue,
     clearErrors,
     setError,
+    register,
+    reset,
+    getValues,
   } = useForm({
     criteriaMode: 'all',
   })
+
+  useEffect(() => {
+    let defaultValues: any = {}
+    register('sell')
+    register('buy')
+    register('general')
+    defaultValues.sell = 'xSGD'
+    defaultValues.buy = 'xIDR'
+    reset({ ...defaultValues })
+  }, [])
 
   const onSubmit = async (data) => {
     setLoading(true)
@@ -140,12 +153,14 @@ const Exchange = () => {
 
     rate = exchangeRate
     clearErrors()
+
     if (type === 'sell') {
       setValue('sellAmount', input)
       calculatedAmount =
         parseFloat(input) * parseFloat(rate)
           ? (parseFloat(input) * parseFloat(rate)).toString()
           : ''
+
       setValue('buyAmount', calculatedAmount)
     } else {
       setValue('buyAmount', input)
@@ -162,7 +177,7 @@ const Exchange = () => {
       setValue('sellAmount', calculatedAmount)
     }
     setLoading(false)
-  }, 1000)
+  }, 1200)
 
   const handleExchangeRate = async () => {
     setExchangeRate('----')
@@ -177,6 +192,28 @@ const Exchange = () => {
       .toString()
 
     setExchangeRate(rate)
+  }
+
+  const handleCurrencyChange = (type: string, currency: any) => {
+    if (type === 'sell') {
+      setSell(currency)
+      setValue('sell', currency.stableCoin)
+    } else {
+      setBuy(currency)
+      setValue('buy', currency.stableCoin)
+    }
+    let values = getValues(['sell', 'buy'])
+
+    if ([...new Set(values)].length === 1) {
+      setError('general', {
+        type: 'error',
+        message:
+          'Sell and Buy should not be of the same currency. Please change.',
+      })
+    } else {
+      clearErrors('general')
+    }
+    console.log(type, currency.stableCoin)
   }
 
   return (
@@ -196,7 +233,8 @@ const Exchange = () => {
                   name={'Select'}
                   options={CURRENCIES}
                   selected={sell}
-                  setSelected={setSell}
+                  setSelected={handleCurrencyChange}
+                  type={'sell'}
                 />
               </div>
               <div>
@@ -267,7 +305,8 @@ const Exchange = () => {
                   name={'Select'}
                   options={CURRENCIES}
                   selected={buy}
-                  setSelected={setBuy}
+                  setSelected={handleCurrencyChange}
+                  type={'buy'}
                 />
               </div>
               <div>
@@ -323,7 +362,20 @@ const Exchange = () => {
               </div>
             </div>
           </div>
-
+          <ErrorMessage
+            errors={errors}
+            name="general"
+            render={({ messages }) => {
+              console.log(errors.general)
+              return (
+                errors.general && (
+                  <p className="font-workSans text-xs text-red-600">
+                    {errors.general.message as any}
+                  </p>
+                )
+              )
+            }}
+          />
           <div className="pb-6">
             <button
               type="submit"
