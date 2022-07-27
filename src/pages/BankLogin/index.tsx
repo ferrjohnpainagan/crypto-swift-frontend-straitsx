@@ -25,6 +25,7 @@ const BankLogin = () => {
       console.log(response)
       if (response.res.status == 200) {
         localStorage.setItem('isLoggedIn', 'true')
+        localStorage.setItem('exchangeBalance', '0')
         localStorage.setItem(
           'accountHolderName',
           response.res.data.data.bankAccount.account_holder_name,

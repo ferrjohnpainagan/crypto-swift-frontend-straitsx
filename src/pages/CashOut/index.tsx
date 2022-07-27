@@ -24,7 +24,8 @@ const CashOut = () => {
   const customerId = localStorage.getItem('customerId')
   const accountNumber = localStorage.getItem('bankAccountRecipient')
   const isLoggedIn = localStorage.getItem('isLoggedIn')
-  const [currency, setCurrency] = useState<any>(CURRENCIES[0])
+  const exchangeBalance: any = localStorage.getItem('exchangeBalance')
+  const [currency, setCurrency] = useState<any>(CURRENCIES[1])
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState('pending')
   const [balance, setBalance] = useState<any>('')
@@ -95,6 +96,10 @@ const CashOut = () => {
       const transactionId = randomCodeGenerator(6)
       console.log(response)
       if (response.status === 200) {
+        const newExchangeBalance =
+          parseFloat(exchangeBalance) - parseFloat(cashOutAmount)
+        localStorage.setItem('exchangeBalance', newExchangeBalance.toString())
+
         setStatus('success')
 
         setTimeout(() => {
@@ -139,7 +144,8 @@ const CashOut = () => {
       balances = { ...balances, [symbol]: currencyFormatter.format(amount, {}) }
 
       if (inputCurrency === symbol) {
-        setBalance(currencyFormatter.format(amount, {}))
+        // setBalance(currencyFormatter.format(amount, {}))
+        setBalance(exchangeBalance)
       }
     }
 
@@ -147,7 +153,7 @@ const CashOut = () => {
   }
 
   useEffect(() => {
-    handleGetWalletBalance(CURRENCIES[0].stableCoin)
+    handleGetWalletBalance(CURRENCIES[1].stableCoin)
   }, [])
 
   return (
@@ -161,7 +167,7 @@ const CashOut = () => {
           <div>
             <Dropdown
               name={'Select'}
-              options={CURRENCIES}
+              options={[CURRENCIES[1]]}
               selected={currency}
               setSelected={handleSelectCurrency}
             />

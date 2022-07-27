@@ -23,6 +23,7 @@ const Exchange = () => {
   let count = 0
   const THRESHOLD = 5
   const isLoggedIn = localStorage.getItem('isLoggedIn')
+  const exchangeBalance: any = localStorage.getItem('exchangeBalance')
   const [sell, setSell] = useState({ stableCoin: 'xSGD' })
   const [buy, setBuy] = useState({ stableCoin: 'xIDR' })
   const [status, setStatus] = useState('pending')
@@ -101,7 +102,7 @@ const Exchange = () => {
     const buyAmount = Math.round(data.buyAmount).toString()
 
     const amountToWei = ethers.utils.parseUnits(sellAmount, 6)
-    const amount = ethers.utils.formatUnits(amountToWei, 'wei')
+    const exchangeAmount = ethers.utils.formatUnits(amountToWei, 'wei')
     /**
      * TODO
      * implement retry on provider related error
@@ -117,10 +118,14 @@ const Exchange = () => {
       try {
         count += 1
 
-        const response = await processExchange(Number(amount))
+        const response = await processExchange(Number(exchangeAmount))
         const txHash = `https://polygonscan.com/tx/${response.data.data.transactionHash}`
 
         if (response.status === 200) {
+          const newExchangeBalance =
+            parseFloat(exchangeBalance) + parseFloat(buyAmount)
+          localStorage.setItem('exchangeBalance', newExchangeBalance.toString())
+
           setStatus('success')
           setTimeout(() => {
             navigate('/remit/success/exchange', {
@@ -231,7 +236,7 @@ const Exchange = () => {
                 <a className="text-gray1">Sell</a>
                 <CurrencyDropdown
                   name={'Select'}
-                  options={CURRENCIES}
+                  options={[CURRENCIES[0]]}
                   selected={sell}
                   setSelected={handleCurrencyChange}
                   type={'sell'}
@@ -303,7 +308,7 @@ const Exchange = () => {
                 <a className="text-gray1">Buy</a>
                 <CurrencyDropdown
                   name={'Select'}
-                  options={CURRENCIES}
+                  options={[CURRENCIES[1]]}
                   selected={buy}
                   setSelected={handleCurrencyChange}
                   type={'buy'}
