@@ -9,7 +9,8 @@ const CurrencyDropdown = ({
   options,
   selected,
   setSelected,
-}: DropdownInterface) => {
+  type,
+}: any) => {
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
@@ -48,7 +49,7 @@ const CurrencyDropdown = ({
                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                         'text-md flex items-center px-4 py-2',
                       )}
-                      onClick={() => setSelected(item)}
+                      onClick={() => setSelected(type, item)}
                     >
                       {item.stableCoin}
                     </a>

@@ -1,5 +1,5 @@
 import React from 'react'
-import BankLogo from '../../assets/bank-logo.svg'
+import BankLogo from '../../assets/bank-logo.png'
 import Loader from 'components/Loader'
 
 import { usePlaidLink } from 'react-plaid-link'
