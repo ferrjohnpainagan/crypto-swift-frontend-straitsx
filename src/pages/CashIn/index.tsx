@@ -137,7 +137,7 @@ const CashIn = () => {
           <div className="h-16">
             <Dropdown
               name={'Select'}
-              options={CURRENCIES}
+              options={[CURRENCIES[0]]}
               selected={currency}
               setSelected={handleSelectCurrency}
             />

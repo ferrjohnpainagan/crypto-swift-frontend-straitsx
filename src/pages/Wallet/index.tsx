@@ -14,6 +14,7 @@ import Loader from 'components/Loader'
 
 const Wallet = () => {
   const navigate = useNavigate()
+  const isLoggedIn = localStorage.getItem('isLoggedIn')
   const [currency, setCurrency] = useState<any>(CURRENCIES[0])
   const [labels, setLabels] = useState([])
   const [balanceList, setBalanceList] = useState([])
@@ -25,6 +26,16 @@ const Wallet = () => {
     sgd: 1.39,
     idr: 15044.3,
   })
+
+  useEffect(() => {
+    if (isLoggedIn == 'true') return
+    navigate('/error', {
+      state: {
+        message:
+          'You are not yet logged in. Please login first to access this page.',
+      },
+    })
+  }, [])
 
   const data = {
     labels: labels,
