@@ -24,6 +24,7 @@ const Exchange = () => {
   const THRESHOLD = 5
   const isLoggedIn = localStorage.getItem('isLoggedIn')
   const exchangeBalance: any = localStorage.getItem('exchangeBalance')
+  const cashInAmount: any = localStorage.getItem('cashInAmount')
   const [sell, setSell] = useState({ stableCoin: 'xSGD' })
   const [buy, setBuy] = useState({ stableCoin: 'xIDR' })
   const [status, setStatus] = useState('pending')
@@ -65,6 +66,7 @@ const Exchange = () => {
     register('general')
     defaultValues.sell = 'xSGD'
     defaultValues.buy = 'xIDR'
+    handleInputChange('sell', cashInAmount)
     reset({ ...defaultValues })
   }, [])
 
@@ -84,17 +86,17 @@ const Exchange = () => {
   }
 
   const isBalanceEnough = async (amount: string) => {
-    const response = await getCryptoWalletBalance()
-    const balanceObject = response
+    // const response = await getCryptoWalletBalance()
+    // const balanceObject = response
 
-    let walletBalance
-    for (const [key, value] of Object.entries(balanceObject)) {
-      if (key === sell.stableCoin) {
-        walletBalance = new BigNumber(value as string).toFixed(2)
-      }
-    }
+    // let walletBalance
+    // for (const [key, value] of Object.entries(balanceObject)) {
+    //   if (key === sell.stableCoin) {
+    //     walletBalance = new BigNumber(value as string).toFixed(2)
+    //   }
+    // }
 
-    return parseFloat(walletBalance) > parseFloat(amount)
+    return parseFloat(cashInAmount) > parseFloat(amount)
   }
 
   const handleExchange = async (data) => {
@@ -154,9 +156,8 @@ const Exchange = () => {
     let calculatedAmount
     let rate
 
-    await handleExchangeRate()
+    rate = await handleExchangeRate()
 
-    rate = exchangeRate
     clearErrors()
 
     if (type === 'sell') {
@@ -165,7 +166,7 @@ const Exchange = () => {
         parseFloat(input) * parseFloat(rate)
           ? (parseFloat(input) * parseFloat(rate)).toString()
           : ''
-
+      console.log('calculatedAmount', calculatedAmount, rate, input)
       setValue('buyAmount', calculatedAmount)
     } else {
       setValue('buyAmount', input)
@@ -197,6 +198,7 @@ const Exchange = () => {
       .toString()
 
     setExchangeRate(rate)
+    return rate
   }
 
   const handleCurrencyChange = (type: string, currency: any) => {

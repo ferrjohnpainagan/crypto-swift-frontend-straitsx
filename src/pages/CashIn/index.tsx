@@ -68,6 +68,8 @@ const CashIn = () => {
 
       const transactionId = randomCodeGenerator(6)
       console.log(response)
+
+      localStorage.setItem('cashInAmount', data.amount)
       if (response.status === 200) {
         setStatus('success')
         setTimeout(() => {
