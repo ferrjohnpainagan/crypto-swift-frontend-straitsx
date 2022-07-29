@@ -161,7 +161,7 @@ export function useXaveAPI(): any {
   const generateMockWallet = useCallback(async () => {
     const request: AxiosRequestConfig = {
       method: 'POST',
-      url: `http://localhost:3000/test/generate_mock_wallet`,
+      url: `${baseUrl}/generate_mock_wallet`,
     }
 
     try {
@@ -176,7 +176,7 @@ export function useXaveAPI(): any {
   const getMockWallet = useCallback(async (walletId: string) => {
     const request: AxiosRequestConfig = {
       method: 'GET',
-      url: `http://localhost:3000/test/get_mock_wallet/${walletId}`,
+      url: `${baseUrl}/get_mock_wallet/${walletId}`,
     }
 
     try {
@@ -191,7 +191,7 @@ export function useXaveAPI(): any {
   const addMockBalance = useCallback(async (data) => {
     const request: AxiosRequestConfig = {
       method: 'POST',
-      url: `http://localhost:3000/test/add_mock_balance`,
+      url: `${baseUrl}/add_mock_balance`,
       data,
     }
 
@@ -207,7 +207,7 @@ export function useXaveAPI(): any {
   const mockExchange = useCallback(async (data) => {
     const request: AxiosRequestConfig = {
       method: 'POST',
-      url: `http://localhost:3000/test/mock_exchange`,
+      url: `${baseUrl}/mock_exchange`,
       data,
     }
 
@@ -223,7 +223,7 @@ export function useXaveAPI(): any {
   const deductBalance = useCallback(async (data) => {
     const request: AxiosRequestConfig = {
       method: 'POST',
-      url: `http://localhost:3000/test/deduct_mock_balance`,
+      url: `${baseUrl}/deduct_mock_balance`,
       data,
     }
 

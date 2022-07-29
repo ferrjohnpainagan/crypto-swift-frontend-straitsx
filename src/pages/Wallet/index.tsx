@@ -15,6 +15,7 @@ import Loader from 'components/Loader'
 const Wallet = () => {
   const navigate = useNavigate()
   const isLoggedIn = localStorage.getItem('isLoggedIn')
+  const mockWalletId = localStorage.getItem('mockWalletId')
   const [currency, setCurrency] = useState<any>(CURRENCIES[0])
   const [labels, setLabels] = useState([])
   const [balanceList, setBalanceList] = useState([])
@@ -61,18 +62,25 @@ const Wallet = () => {
     },
   }
 
-  const { getCryptoWalletBalance, viewStablecoinSwap } = useXaveAPI()
+  const { getCryptoWalletBalance, viewStablecoinSwap, getMockWallet } =
+    useXaveAPI()
 
   useEffect(() => {
     handleGetWalletBalance(CURRENCIES[0])
+    handleMockWalletBalance()
   }, [])
 
   const handleGetWalletBalance = async (walletCurrency) => {
     setLoading(true)
     // const exchangeRate = await handleExchangeRate()
-    const response = await getCryptoWalletBalance()
-    const entries = Object.entries(response)
-    console.log(response)
+    // const response = await getCryptoWalletBalance()
+    const response = await getMockWallet(mockWalletId)
+    const walletBalance = {
+      xSGD: response.sgdBalance,
+      xIDR: response.idrBalance,
+    }
+    const entries = Object.entries(walletBalance)
+    console.log(entries)
     let currencies: any = []
     let balances: any = []
     let balanceDataList: any = []
@@ -83,11 +91,12 @@ const Wallet = () => {
     for (const [symbol, balance] of entries as any) {
       for (let i = 0; i < CURRENCIES.length; i++) {
         if (symbol === CURRENCIES[i].stableCoin) {
+          amount = new BigNumber(balance as string)
           // amount = new BigNumber(balance as string)
           //   .div(CURRENCIES[i].conversionFactor ** 2)
           //   .toFixed(2)
           //   .toString()
-          amount = new BigNumber(balance as string).div(10 ** 6).toString()
+          // amount = new BigNumber(balance as string).div(10 ** 6).toString()
 
           // if (symbol !== walletCurrency.stableCoin) {
           //   if (symbol === 'xSGD') {
@@ -120,16 +129,18 @@ const Wallet = () => {
               symbol === 'xIDR'
                 ? `${currencyFormatter.format(
                     parseInt(
-                      new BigNumber(balance as string).div(10 ** 7).toString(),
+                      balance,
+                      // new BigNumber(balance as string).div(10 ** 7).toString(),
                     ),
                     {
-                      symbol: `K ${CURRENCIES[i].currency}`,
+                      symbol: `${CURRENCIES[i].currency}`,
                       format: '%v %s',
                     },
                   )}`
                 : `${currencyFormatter.format(
                     parseFloat(
-                      new BigNumber(balance as string).div(10 ** 6).toString(),
+                      balance,
+                      // new BigNumber(balance as string).div(10 ** 6).toString(),
                     ),
                     {
                       symbol: CURRENCIES[i].currency,
@@ -167,6 +178,11 @@ const Wallet = () => {
 
     // setExchangeRate(rate)
     return rate
+  }
+
+  const handleMockWalletBalance = async () => {
+    const response = await getMockWallet(mockWalletId)
+    console.log(response)
   }
 
   return (
