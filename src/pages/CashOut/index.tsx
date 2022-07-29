@@ -26,13 +26,14 @@ const CashOut = () => {
   const accountNumber = localStorage.getItem('bankAccountRecipient')
   const isLoggedIn = localStorage.getItem('isLoggedIn')
   const exchangeBalance: any = localStorage.getItem('exchangeBalance')
+  const mockWalletId = localStorage.getItem('mockWalletId')
   const [currency, setCurrency] = useState<any>(CURRENCIES[1])
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState('pending')
   const [balance, setBalance] = useState<any>('')
   const [balancesObject, setBalancesObject] = useState<any>([])
 
-  const { processCashOut, getCryptoWalletBalance } = useXaveAPI()
+  const { processCashOut, getCryptoWalletBalance, deductBalance } = useXaveAPI()
 
   useEffect(() => {
     if (isLoggedIn == 'true') return
@@ -95,6 +96,7 @@ const CashOut = () => {
       const transactionId = randomCodeGenerator(6)
       console.log(response)
       if (response.status === 200) {
+        await handleDeductMockBalance(data.amount)
         const newExchangeBalance =
           parseFloat(exchangeBalance) - parseFloat(cashOutAmount)
         localStorage.setItem('exchangeBalance', newExchangeBalance.toString())
@@ -149,6 +151,24 @@ const CashOut = () => {
     }
 
     setBalancesObject(balances)
+  }
+
+  const handleDeductMockBalance = async (amount: string) => {
+    const data = {
+      walletId: mockWalletId,
+      sgd: 0,
+      idr: amount,
+    }
+
+    let response
+
+    try {
+      response = await deductBalance(data)
+    } catch (error) {
+      console.log(error)
+    }
+
+    console.log(response)
   }
 
   useEffect(() => {

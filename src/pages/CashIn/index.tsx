@@ -27,6 +27,7 @@ const CashIn = () => {
   const accountNumber = localStorage.getItem('accountNumber')
   const customerId = localStorage.getItem('customerId')
   const username = localStorage.getItem('username')
+  const mockWalletId = localStorage.getItem('mockWalletId')
   const [loading, setLoading] = useState(false)
   const [amount, setAmount] = useState('0.0')
   const [currency, setCurrency] = useState<any>(CURRENCIES[0])
@@ -39,7 +40,7 @@ const CashIn = () => {
     navigate('/remit/bank-login')
   }, [])
 
-  const { processCashIn, getCryptoWalletBalance } = useXaveAPI()
+  const { processCashIn, getCryptoWalletBalance, addMockBalance } = useXaveAPI()
 
   const {
     handleSubmit,
@@ -71,6 +72,7 @@ const CashIn = () => {
 
       localStorage.setItem('cashInAmount', data.amount)
       if (response.status === 200) {
+        await handleAddMockBalance(data.amount)
         setStatus('success')
         setTimeout(() => {
           navigate('/remit/success/cash-in', {
@@ -122,6 +124,24 @@ const CashIn = () => {
     setBalancesObject(balances)
   }
 
+  const handleAddMockBalance = async (amount: string) => {
+    const data = {
+      walletId: mockWalletId,
+      sgd: amount,
+      idr: 0,
+    }
+
+    let response
+
+    try {
+      response = await addMockBalance(data)
+    } catch (error) {
+      console.log(error)
+    }
+
+    console.log(response)
+  }
+
   useEffect(() => {
     handleGetWalletBalance(CURRENCIES[0].stableCoin)
   }, [])
@@ -137,7 +157,7 @@ const CashIn = () => {
           <div className="h-16">
             <Dropdown
               name={'Select'}
-              options={CURRENCIES}
+              options={[CURRENCIES[0]]}
               selected={currency}
               setSelected={handleSelectCurrency}
             />

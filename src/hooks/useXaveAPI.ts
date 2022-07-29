@@ -158,6 +158,84 @@ export function useXaveAPI(): any {
     }
   }, [])
 
+  const generateMockWallet = useCallback(async () => {
+    const request: AxiosRequestConfig = {
+      method: 'POST',
+      url: `${baseUrl}/generate_mock_wallet`,
+    }
+
+    try {
+      const res: AxiosResponse = await axios(request)
+      return res.data.data
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }, [])
+
+  const getMockWallet = useCallback(async (walletId: string) => {
+    const request: AxiosRequestConfig = {
+      method: 'GET',
+      url: `${baseUrl}/get_mock_wallet/${walletId}`,
+    }
+
+    try {
+      const res: AxiosResponse = await axios(request)
+      return res.data.data
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }, [])
+
+  const addMockBalance = useCallback(async (data) => {
+    const request: AxiosRequestConfig = {
+      method: 'POST',
+      url: `${baseUrl}/add_mock_balance`,
+      data,
+    }
+
+    try {
+      const res: AxiosResponse = await axios(request)
+      return res.data.data
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }, [])
+
+  const mockExchange = useCallback(async (data) => {
+    const request: AxiosRequestConfig = {
+      method: 'POST',
+      url: `${baseUrl}/mock_exchange`,
+      data,
+    }
+
+    try {
+      const res: AxiosResponse = await axios(request)
+      return res.data.data
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }, [])
+
+  const deductBalance = useCallback(async (data) => {
+    const request: AxiosRequestConfig = {
+      method: 'POST',
+      url: `${baseUrl}/deduct_mock_balance`,
+      data,
+    }
+
+    try {
+      const res: AxiosResponse = await axios(request)
+      return res.data.data
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }, [])
+
   return {
     linkBankAccount,
     getCustomerBankAccount,
@@ -166,5 +244,10 @@ export function useXaveAPI(): any {
     processCashOut,
     getCryptoWalletBalance,
     viewStablecoinSwap,
+    generateMockWallet,
+    getMockWallet,
+    addMockBalance,
+    mockExchange,
+    deductBalance,
   }
 }

@@ -41,6 +41,7 @@ function App() {
             <Route path="/wallet">
               <Route path="home" element={<Wallet />} />
             </Route>
+            <Route path="/error" element={<ErrorPage />} />
           </Routes>
         </div>
       </div>
