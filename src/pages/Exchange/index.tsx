@@ -25,6 +25,7 @@ const Exchange = () => {
   const isLoggedIn = localStorage.getItem('isLoggedIn')
   const exchangeBalance: any = localStorage.getItem('exchangeBalance')
   const cashInAmount: any = localStorage.getItem('cashInAmount')
+  const mockWalletId = localStorage.getItem('mockWalletId')
   const [sell, setSell] = useState({ stableCoin: 'xSGD' })
   const [buy, setBuy] = useState({ stableCoin: 'xIDR' })
   const [status, setStatus] = useState('pending')
@@ -38,8 +39,12 @@ const Exchange = () => {
   }, [])
 
   const { getExchangeRate } = useCurrencyAPI()
-  const { processExchange, getCryptoWalletBalance, viewStablecoinSwap } =
-    useXaveAPI()
+  const {
+    processExchange,
+    getCryptoWalletBalance,
+    viewStablecoinSwap,
+    mockExchange,
+  } = useXaveAPI()
 
   useEffect(() => {
     handleExchangeRate()
@@ -96,7 +101,7 @@ const Exchange = () => {
     //   }
     // }
 
-    return parseFloat(cashInAmount) > parseFloat(amount)
+    return parseFloat(cashInAmount) >= parseFloat(amount)
   }
 
   const handleExchange = async (data) => {
@@ -124,6 +129,7 @@ const Exchange = () => {
         const txHash = `https://polygonscan.com/tx/${response.data.data.transactionHash}`
 
         if (response.status === 200) {
+          await handleUpdateMockBalance(sellAmount, buyAmount)
           const newExchangeBalance =
             parseFloat(exchangeBalance) + parseFloat(buyAmount)
           localStorage.setItem('exchangeBalance', newExchangeBalance.toString())
@@ -221,6 +227,24 @@ const Exchange = () => {
       clearErrors('general')
     }
     console.log(type, currency.stableCoin)
+  }
+
+  const handleUpdateMockBalance = async (sell, buy) => {
+    const data = {
+      walletId: mockWalletId,
+      sgd: parseFloat(sell),
+      idr: parseFloat(buy),
+    }
+
+    let response
+
+    try {
+      response = await mockExchange(data)
+    } catch (error) {
+      console.log(error)
+    }
+
+    console.log(response)
   }
 
   return (
