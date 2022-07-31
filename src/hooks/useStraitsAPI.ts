@@ -6,7 +6,7 @@ const { REACT_APP_SERVERLESS_STAGE_URL, REACT_APP_XAVE_API_URL } = process.env
 const baseUrl = `${REACT_APP_XAVE_API_URL}/${REACT_APP_SERVERLESS_STAGE_URL}`
 
 export function useStraitsAPI(): any {
-  const processCashIn = useCallback(async (data) => {
+  const processCashInStraits = useCallback(async (data) => {
     const request: AxiosRequestConfig = {
       method: 'POST',
       url: `${baseUrl}/create_bank_transfer_payment`,
@@ -22,7 +22,7 @@ export function useStraitsAPI(): any {
     }
   }, [])
 
-  const processCashOut = useCallback(async (data) => {
+  const processCashOutStraits = useCallback(async (data) => {
     const request: AxiosRequestConfig = {
       method: 'POST',
       url: `${baseUrl}/create_bank_transfer_payout`,
@@ -39,7 +39,7 @@ export function useStraitsAPI(): any {
   }, [])
 
   return {
-    processCashIn,
-    processCashOut,
+    processCashInStraits,
+    processCashOutStraits,
   }
 }

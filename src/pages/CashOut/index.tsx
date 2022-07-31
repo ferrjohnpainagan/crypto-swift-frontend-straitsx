@@ -16,7 +16,7 @@ import Loader from 'components/Loader'
 import Status from 'components/Status'
 import { CURRENCIES } from 'constants/index'
 
-const { REACT_APP_IDR_BALANCE } = process.env
+const { REACT_APP_DEPLOYMENT } = process.env
 
 const CashOut = () => {
   const navigate = useNavigate()
@@ -33,7 +33,10 @@ const CashOut = () => {
   const [balance, setBalance] = useState<any>('')
   const [balancesObject, setBalancesObject] = useState<any>([])
 
-  const { processCashOut, getCryptoWalletBalance, deductBalance } = useXaveAPI()
+  const { processCashOutXave, getCryptoWalletBalanceXave, deductBalanceXave } =
+    useXaveAPI()
+
+  const { processCashOutStraits } = useStraitsAPI()
 
   useEffect(() => {
     if (isLoggedIn == 'true') return
@@ -86,12 +89,21 @@ const CashOut = () => {
     setLoading(true)
 
     try {
-      const response = await processCashOut({
-        username: username,
-        customerId: customerId,
-        bankAccountNumber: accountNumber,
-        amount: data.amount,
-      })
+      const response =
+        REACT_APP_DEPLOYMENT === 'mock'
+          ? await processCashOutXave({
+              username: username,
+              customerId: customerId,
+              bankAccountNumber: accountNumber,
+              amount: data.amount,
+            })
+          : await processCashOutStraits({
+              // username: username,
+              customerProfileId:
+                'customer_profile_83d91c19-9d38-4cbc-baa2-6c4bafd67d42',
+              bankAccountNumber: '9122234441',
+              amount: data.amount,
+            })
 
       const transactionId = randomCodeGenerator(6)
       console.log(response)
@@ -132,7 +144,7 @@ const CashOut = () => {
   }
 
   const handleGetWalletBalance = async (inputCurrency) => {
-    const response = await getCryptoWalletBalance()
+    const response = await getCryptoWalletBalanceXave()
     const entries = Object.entries(response)
 
     let balances = {} as any
@@ -163,7 +175,7 @@ const CashOut = () => {
     let response
 
     try {
-      response = await deductBalance(data)
+      response = await deductBalanceXave(data)
     } catch (error) {
       console.log(error)
     }

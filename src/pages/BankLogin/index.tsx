@@ -15,17 +15,17 @@ const BankLogin = () => {
   const [loading, setLoading] = useState(false)
   const [linkToken, setLinkToken] = useState('')
 
-  const { linkBankAccount, generateMockWallet } = useXaveAPI()
+  const { linkBankAccountXave, generateMockWalletXave } = useXaveAPI()
   const { generateLinkToken } = usePlaidAuthAPI()
 
   const handleLoginBank = async () => {
     setLoading(true)
 
     try {
-      const response = await linkBankAccount()
+      const response = await linkBankAccountXave()
       console.log(response)
       if (response.res.status == 200) {
-        const mockWallet = await generateMockWallet()
+        const mockWallet = await generateMockWalletXave()
 
         localStorage.setItem('isLoggedIn', 'true')
         localStorage.setItem('exchangeBalance', '0')

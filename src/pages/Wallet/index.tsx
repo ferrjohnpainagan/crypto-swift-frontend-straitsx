@@ -62,8 +62,11 @@ const Wallet = () => {
     },
   }
 
-  const { getCryptoWalletBalance, viewStablecoinSwap, getMockWallet } =
-    useXaveAPI()
+  const {
+    getCryptoWalletBalanceXave,
+    viewStablecoinSwapXave,
+    getMockWalletXave,
+  } = useXaveAPI()
 
   useEffect(() => {
     handleGetWalletBalance(CURRENCIES[0])
@@ -73,8 +76,8 @@ const Wallet = () => {
   const handleGetWalletBalance = async (walletCurrency) => {
     setLoading(true)
     // const exchangeRate = await handleExchangeRate()
-    // const response = await getCryptoWalletBalance()
-    const response = await getMockWallet(mockWalletId)
+    // const response = await getCryptoWalletBalanceXave()
+    const response = await getMockWalletXave(mockWalletId)
     const walletBalance = {
       xSGD: response.sgdBalance,
       xIDR: response.idrBalance,
@@ -169,7 +172,7 @@ const Wallet = () => {
   const handleExchangeRate = async () => {
     const amountToWei = ethers.utils.parseUnits('1', 6)
     const amount = ethers.utils.formatUnits(amountToWei, 'wei')
-    const response = await viewStablecoinSwap(amount)
+    const response = await viewStablecoinSwapXave(amount)
 
     const rate = new BigNumber(response.data.data.rate)
       .div(10 ** 6)
@@ -181,7 +184,7 @@ const Wallet = () => {
   }
 
   const handleMockWalletBalance = async () => {
-    const response = await getMockWallet(mockWalletId)
+    const response = await getMockWalletXave(mockWalletId)
     console.log(response)
   }
 

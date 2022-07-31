@@ -18,7 +18,7 @@ import { CURRENCIES } from 'constants/index'
 import Loader from 'components/Loader'
 import Status from 'components/Status'
 
-const { REACT_APP_SGD_BALANCE } = process.env
+const { REACT_APP_DEPLOYMENT } = process.env
 
 const CashIn = () => {
   const navigate = useNavigate()
@@ -40,7 +40,10 @@ const CashIn = () => {
     navigate('/remit/bank-login')
   }, [])
 
-  const { processCashIn, getCryptoWalletBalance, addMockBalance } = useXaveAPI()
+  const { processCashInXave, getCryptoWalletBalanceXave, addMockBalanceXave } =
+    useXaveAPI()
+
+  const { processCashInStraits } = useStraitsAPI()
 
   const {
     handleSubmit,
@@ -60,12 +63,20 @@ const CashIn = () => {
     setLoading(true)
     setAmount(data.amount)
     try {
-      const response = await processCashIn({
-        username: username,
-        customerId: customerId,
-        bankAccountNumber: accountNumber,
-        amount: data.amount,
-      })
+      const response =
+        REACT_APP_DEPLOYMENT === 'mock'
+          ? await processCashInXave({
+              username: username,
+              customerId: customerId,
+              bankAccountNumber: accountNumber,
+              amount: data.amount,
+            })
+          : await processCashInStraits({
+              sourceAccountHolderName: username,
+              customerId: customerId,
+              destBankAccountNumber: accountNumber,
+              amount: data.amount,
+            })
 
       const transactionId = randomCodeGenerator(6)
       console.log(response)
@@ -104,7 +115,7 @@ const CashIn = () => {
   }
 
   const handleGetWalletBalance = async (inputCurrency) => {
-    const response = await getCryptoWalletBalance()
+    const response = await getCryptoWalletBalanceXave()
     const entries = Object.entries(response)
 
     let balances = {} as any
@@ -134,7 +145,7 @@ const CashIn = () => {
     let response
 
     try {
-      response = await addMockBalance(data)
+      response = await addMockBalanceXave(data)
     } catch (error) {
       console.log(error)
     }

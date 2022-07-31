@@ -40,10 +40,10 @@ const Exchange = () => {
 
   const { getExchangeRate } = useCurrencyAPI()
   const {
-    processExchange,
-    getCryptoWalletBalance,
-    viewStablecoinSwap,
-    mockExchange,
+    processExchangeXave,
+    getCryptoWalletBalanceXave,
+    viewStablecoinSwapXave,
+    mockExchangeXave,
   } = useXaveAPI()
 
   useEffect(() => {
@@ -125,7 +125,7 @@ const Exchange = () => {
       try {
         count += 1
 
-        const response = await processExchange(Number(exchangeAmount))
+        const response = await processExchangeXave(Number(exchangeAmount))
         const txHash = `https://polygonscan.com/tx/${response.data.data.transactionHash}`
 
         if (response.status === 200) {
@@ -196,7 +196,7 @@ const Exchange = () => {
 
     const amountToWei = ethers.utils.parseUnits('1', 6)
     const amount = ethers.utils.formatUnits(amountToWei, 'wei')
-    const response = await viewStablecoinSwap(amount)
+    const response = await viewStablecoinSwapXave(amount)
 
     const rate = new BigNumber(response.data.data.rate)
       .div(10 ** 6)
@@ -239,7 +239,7 @@ const Exchange = () => {
     let response
 
     try {
-      response = await mockExchange(data)
+      response = await mockExchangeXave(data)
     } catch (error) {
       console.log(error)
     }
