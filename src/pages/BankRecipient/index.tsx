@@ -52,7 +52,7 @@ const BankRecipient = () => {
     setValue(
       'accountNumber',
       // (Math.floor(Math.random() * 9000000000) + 1000000000).toString(),
-      '4556176004159289',
+      '5782298111',
     )
     randomSwiftCodeGenerator()
   }

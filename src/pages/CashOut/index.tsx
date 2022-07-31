@@ -16,22 +16,27 @@ import Loader from 'components/Loader'
 import Status from 'components/Status'
 import { CURRENCIES } from 'constants/index'
 
-const { REACT_APP_IDR_BALANCE } = process.env
+const { REACT_APP_DEPLOYMENT } = process.env
 
 const CashOut = () => {
   const navigate = useNavigate()
   const username = localStorage.getItem('username')
-  const customerId = localStorage.getItem('customerId')
+  // const customerId = localStorage.getItem('customerId')
+  const customerId = 'customer_profile_e0709472-086a-475d-9b00-aea5ac3c45e7'
   const accountNumber = localStorage.getItem('bankAccountRecipient')
   const isLoggedIn = localStorage.getItem('isLoggedIn')
-  const [currency, setCurrency] = useState<any>(CURRENCIES[0])
+  const exchangeBalance: any = localStorage.getItem('exchangeBalance')
+  const mockWalletId = localStorage.getItem('mockWalletId')
+  const [currency, setCurrency] = useState<any>(CURRENCIES[1])
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState('pending')
   const [balance, setBalance] = useState<any>('')
   const [balancesObject, setBalancesObject] = useState<any>([])
 
-  const { getCryptoWalletBalance } = useXaveAPI()
-  const { processCashOut } = useStraitsAPI()
+  const { processCashOutXave, getCryptoWalletBalanceXave, deductBalanceXave } =
+    useXaveAPI()
+
+  const { processCashOutStraits } = useStraitsAPI()
 
   useEffect(() => {
     if (isLoggedIn == 'true') return
@@ -84,17 +89,30 @@ const CashOut = () => {
     setLoading(true)
 
     try {
-      const response = await processCashOut({
-        // username: username,
-        customerProfileId:
-          'customer_profile_83d91c19-9d38-4cbc-baa2-6c4bafd67d42',
-        bankAccountNumber: '9122234441',
-        amount: data.amount,
-      })
+      const response =
+        REACT_APP_DEPLOYMENT === 'mock'
+          ? await processCashOutXave({
+              username: username,
+              customerId: customerId,
+              bankAccountNumber: accountNumber,
+              amount: data.amount,
+            })
+          : await processCashOutStraits({
+              // username: username,
+              customerProfileId:
+                'customer_profile_83d91c19-9d38-4cbc-baa2-6c4bafd67d42',
+              bankAccountNumber: '9122234441',
+              amount: data.amount,
+            })
 
       const transactionId = randomCodeGenerator(6)
       console.log(response)
       if (response.status === 200) {
+        await handleDeductMockBalance(data.amount)
+        const newExchangeBalance =
+          parseFloat(exchangeBalance) - parseFloat(cashOutAmount)
+        localStorage.setItem('exchangeBalance', newExchangeBalance.toString())
+
         setStatus('success')
 
         setTimeout(() => {
@@ -126,7 +144,7 @@ const CashOut = () => {
   }
 
   const handleGetWalletBalance = async (inputCurrency) => {
-    const response = await getCryptoWalletBalance()
+    const response = await getCryptoWalletBalanceXave()
     const entries = Object.entries(response)
 
     let balances = {} as any
@@ -139,15 +157,34 @@ const CashOut = () => {
       balances = { ...balances, [symbol]: currencyFormatter.format(amount, {}) }
 
       if (inputCurrency === symbol) {
-        setBalance(currencyFormatter.format(amount, {}))
+        // setBalance(currencyFormatter.format(amount, {}))
+        setBalance(exchangeBalance)
       }
     }
 
     setBalancesObject(balances)
   }
 
+  const handleDeductMockBalance = async (amount: string) => {
+    const data = {
+      walletId: mockWalletId,
+      sgd: 0,
+      idr: amount,
+    }
+
+    let response
+
+    try {
+      response = await deductBalanceXave(data)
+    } catch (error) {
+      console.log(error)
+    }
+
+    console.log(response)
+  }
+
   useEffect(() => {
-    handleGetWalletBalance(CURRENCIES[0].stableCoin)
+    handleGetWalletBalance(CURRENCIES[1].stableCoin)
   }, [])
 
   return (
@@ -161,7 +198,7 @@ const CashOut = () => {
           <div>
             <Dropdown
               name={'Select'}
-              options={CURRENCIES}
+              options={[CURRENCIES[1]]}
               selected={currency}
               setSelected={handleSelectCurrency}
             />

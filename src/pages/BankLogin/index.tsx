@@ -13,18 +13,22 @@ const BankLogin = () => {
   const navigate = useNavigate()
   const dispatch: AppDispatch = useDispatch()
   const [loading, setLoading] = useState(false)
-  const { linkBankAccount } = useXaveAPI()
   const [linkToken, setLinkToken] = useState('')
+
+  const { linkBankAccountXave, generateMockWalletXave } = useXaveAPI()
   const { generateLinkToken } = usePlaidAuthAPI()
 
   const handleLoginBank = async () => {
     setLoading(true)
 
     try {
-      const response = await linkBankAccount()
+      const response = await linkBankAccountXave()
       console.log(response)
       if (response.res.status == 200) {
+        const mockWallet = await generateMockWalletXave()
+
         localStorage.setItem('isLoggedIn', 'true')
+        localStorage.setItem('exchangeBalance', '0')
         localStorage.setItem(
           'accountHolderName',
           response.res.data.data.bankAccount.account_holder_name,
@@ -38,6 +42,7 @@ const BankLogin = () => {
           response.res.data.data.customer.data.id,
         )
         localStorage.setItem('username', response.username)
+        localStorage.setItem('mockWalletId', mockWallet.walletId)
         navigate('/remit/cash-in')
         setLoading(false)
       }

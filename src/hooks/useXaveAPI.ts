@@ -10,7 +10,7 @@ export function useXaveAPI(): any {
   /**
    * Mock linking of Bank account
    */
-  const linkBankAccount = useCallback(async () => {
+  const linkBankAccountXave = useCallback(async () => {
     const request: AxiosRequestConfig = {
       method: 'POST',
       url: `${baseUrl}/create_customer_bank_account`,
@@ -47,7 +47,7 @@ export function useXaveAPI(): any {
     }
   }, [])
 
-  const getCustomerBankAccount = useCallback(
+  const getCustomerBankAccountXave = useCallback(
     async (customerId: string, bankAccountNumber: string) => {
       const request: AxiosRequestConfig = {
         method: 'GET',
@@ -65,7 +65,7 @@ export function useXaveAPI(): any {
     [],
   )
 
-  const processCashIn = useCallback(async (data: CashInInterface) => {
+  const processCashInXave = useCallback(async (data: CashInInterface) => {
     const request: AxiosRequestConfig = {
       method: 'POST',
       url: `${baseUrl}/cash_in`,
@@ -81,7 +81,7 @@ export function useXaveAPI(): any {
     }
   }, [])
 
-  const processExchange = useCallback(async (amount: string) => {
+  const processExchangeXave = useCallback(async (amount: string) => {
     const request: AxiosRequestConfig = {
       method: 'POST',
       url: `https://qp83yt9g1f.execute-api.us-east-1.amazonaws.com/test/demo/stablecoin_swap`,
@@ -106,7 +106,7 @@ export function useXaveAPI(): any {
     }
   }, [])
 
-  const processCashOut = useCallback(async (data: CashOutInterface) => {
+  const processCashOutXave = useCallback(async (data: CashOutInterface) => {
     const request: AxiosRequestConfig = {
       method: 'POST',
       url: `${baseUrl}/cash_out`,
@@ -122,7 +122,7 @@ export function useXaveAPI(): any {
     }
   }, [])
 
-  const getCryptoWalletBalance = useCallback(async () => {
+  const getCryptoWalletBalanceXave = useCallback(async () => {
     const request: AxiosRequestConfig = {
       method: 'GET',
       url: `${baseUrl}/balance/crypto_wallet`,
@@ -137,7 +137,7 @@ export function useXaveAPI(): any {
     }
   }, [])
 
-  const viewStablecoinSwap = useCallback(async (amount: string) => {
+  const viewStablecoinSwapXave = useCallback(async (amount: string) => {
     const request: AxiosRequestConfig = {
       method: 'POST',
       url: `${baseUrl}/demo/view_stablecoin_swap`,
@@ -158,13 +158,96 @@ export function useXaveAPI(): any {
     }
   }, [])
 
+  const generateMockWalletXave = useCallback(async () => {
+    const request: AxiosRequestConfig = {
+      method: 'POST',
+      url: `${baseUrl}/generate_mock_wallet`,
+    }
+
+    try {
+      const res: AxiosResponse = await axios(request)
+      return res.data.data
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }, [])
+
+  const getMockWalletXave = useCallback(async (walletId: string) => {
+    const request: AxiosRequestConfig = {
+      method: 'GET',
+      url: `${baseUrl}/get_mock_wallet/${walletId}`,
+    }
+
+    try {
+      const res: AxiosResponse = await axios(request)
+      return res.data.data
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }, [])
+
+  const addMockBalanceXave = useCallback(async (data) => {
+    const request: AxiosRequestConfig = {
+      method: 'POST',
+      url: `${baseUrl}/add_mock_balance`,
+      data,
+    }
+
+    try {
+      const res: AxiosResponse = await axios(request)
+      return res.data.data
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }, [])
+
+  const mockExchangeXave = useCallback(async (data) => {
+    const request: AxiosRequestConfig = {
+      method: 'POST',
+      url: `${baseUrl}/mock_exchange`,
+      data,
+    }
+
+    try {
+      const res: AxiosResponse = await axios(request)
+      return res.data.data
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }, [])
+
+  const deductBalanceXave = useCallback(async (data) => {
+    const request: AxiosRequestConfig = {
+      method: 'POST',
+      url: `${baseUrl}/deduct_mock_balance`,
+      data,
+    }
+
+    try {
+      const res: AxiosResponse = await axios(request)
+      return res.data.data
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }, [])
+
   return {
-    linkBankAccount,
-    getCustomerBankAccount,
-    processCashIn,
-    processExchange,
-    processCashOut,
-    getCryptoWalletBalance,
-    viewStablecoinSwap,
+    linkBankAccountXave,
+    getCustomerBankAccountXave,
+    processCashInXave,
+    processExchangeXave,
+    processCashOutXave,
+    getCryptoWalletBalanceXave,
+    viewStablecoinSwapXave,
+    generateMockWalletXave,
+    getMockWalletXave,
+    addMockBalanceXave,
+    mockExchangeXave,
+    deductBalanceXave,
   }
 }

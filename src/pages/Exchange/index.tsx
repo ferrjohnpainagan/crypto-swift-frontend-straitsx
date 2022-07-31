@@ -23,6 +23,9 @@ const Exchange = () => {
   let count = 0
   const THRESHOLD = 5
   const isLoggedIn = localStorage.getItem('isLoggedIn')
+  const exchangeBalance: any = localStorage.getItem('exchangeBalance')
+  const cashInAmount: any = localStorage.getItem('cashInAmount')
+  const mockWalletId = localStorage.getItem('mockWalletId')
   const [sell, setSell] = useState({ stableCoin: 'xSGD' })
   const [buy, setBuy] = useState({ stableCoin: 'xIDR' })
   const [status, setStatus] = useState('pending')
@@ -36,8 +39,12 @@ const Exchange = () => {
   }, [])
 
   const { getExchangeRate } = useCurrencyAPI()
-  const { processExchange, getCryptoWalletBalance, viewStablecoinSwap } =
-    useXaveAPI()
+  const {
+    processExchangeXave,
+    getCryptoWalletBalanceXave,
+    viewStablecoinSwapXave,
+    mockExchangeXave,
+  } = useXaveAPI()
 
   useEffect(() => {
     handleExchangeRate()
@@ -64,6 +71,7 @@ const Exchange = () => {
     register('general')
     defaultValues.sell = 'xSGD'
     defaultValues.buy = 'xIDR'
+    handleInputChange('sell', cashInAmount)
     reset({ ...defaultValues })
   }, [])
 
@@ -83,17 +91,17 @@ const Exchange = () => {
   }
 
   const isBalanceEnough = async (amount: string) => {
-    const response = await getCryptoWalletBalance()
-    const balanceObject = response
+    // const response = await getCryptoWalletBalance()
+    // const balanceObject = response
 
-    let walletBalance
-    for (const [key, value] of Object.entries(balanceObject)) {
-      if (key === sell.stableCoin) {
-        walletBalance = new BigNumber(value as string).toFixed(2)
-      }
-    }
+    // let walletBalance
+    // for (const [key, value] of Object.entries(balanceObject)) {
+    //   if (key === sell.stableCoin) {
+    //     walletBalance = new BigNumber(value as string).toFixed(2)
+    //   }
+    // }
 
-    return parseFloat(walletBalance) > parseFloat(amount)
+    return parseFloat(cashInAmount) >= parseFloat(amount)
   }
 
   const handleExchange = async (data) => {
@@ -101,7 +109,7 @@ const Exchange = () => {
     const buyAmount = Math.round(data.buyAmount).toString()
 
     const amountToWei = ethers.utils.parseUnits(sellAmount, 6)
-    const amount = ethers.utils.formatUnits(amountToWei, 'wei')
+    const exchangeAmount = ethers.utils.formatUnits(amountToWei, 'wei')
     /**
      * TODO
      * implement retry on provider related error
@@ -117,10 +125,15 @@ const Exchange = () => {
       try {
         count += 1
 
-        const response = await processExchange(Number(amount))
+        const response = await processExchangeXave(Number(exchangeAmount))
         const txHash = `https://polygonscan.com/tx/${response.data.data.transactionHash}`
 
         if (response.status === 200) {
+          await handleUpdateMockBalance(sellAmount, buyAmount)
+          const newExchangeBalance =
+            parseFloat(exchangeBalance) + parseFloat(buyAmount)
+          localStorage.setItem('exchangeBalance', newExchangeBalance.toString())
+
           setStatus('success')
           setTimeout(() => {
             navigate('/remit/success/exchange', {
@@ -149,9 +162,8 @@ const Exchange = () => {
     let calculatedAmount
     let rate
 
-    await handleExchangeRate()
+    rate = await handleExchangeRate()
 
-    rate = exchangeRate
     clearErrors()
 
     if (type === 'sell') {
@@ -160,7 +172,7 @@ const Exchange = () => {
         parseFloat(input) * parseFloat(rate)
           ? (parseFloat(input) * parseFloat(rate)).toString()
           : ''
-
+      console.log('calculatedAmount', calculatedAmount, rate, input)
       setValue('buyAmount', calculatedAmount)
     } else {
       setValue('buyAmount', input)
@@ -184,7 +196,7 @@ const Exchange = () => {
 
     const amountToWei = ethers.utils.parseUnits('1', 6)
     const amount = ethers.utils.formatUnits(amountToWei, 'wei')
-    const response = await viewStablecoinSwap(amount)
+    const response = await viewStablecoinSwapXave(amount)
 
     const rate = new BigNumber(response.data.data.rate)
       .div(10 ** 6)
@@ -192,6 +204,7 @@ const Exchange = () => {
       .toString()
 
     setExchangeRate(rate)
+    return rate
   }
 
   const handleCurrencyChange = (type: string, currency: any) => {
@@ -216,6 +229,24 @@ const Exchange = () => {
     console.log(type, currency.stableCoin)
   }
 
+  const handleUpdateMockBalance = async (sell, buy) => {
+    const data = {
+      walletId: mockWalletId,
+      sgd: parseFloat(sell),
+      idr: parseFloat(buy),
+    }
+
+    let response
+
+    try {
+      response = await mockExchangeXave(data)
+    } catch (error) {
+      console.log(error)
+    }
+
+    console.log(response)
+  }
+
   return (
     <Card width={'35vw'}>
       <div className="flex h-16 w-full items-center justify-between border-b px-8">
@@ -231,7 +262,7 @@ const Exchange = () => {
                 <a className="text-gray1">Sell</a>
                 <CurrencyDropdown
                   name={'Select'}
-                  options={CURRENCIES}
+                  options={[CURRENCIES[0]]}
                   selected={sell}
                   setSelected={handleCurrencyChange}
                   type={'sell'}
@@ -303,7 +334,7 @@ const Exchange = () => {
                 <a className="text-gray1">Buy</a>
                 <CurrencyDropdown
                   name={'Select'}
-                  options={CURRENCIES}
+                  options={[CURRENCIES[1]]}
                   selected={buy}
                   setSelected={handleCurrencyChange}
                   type={'buy'}
