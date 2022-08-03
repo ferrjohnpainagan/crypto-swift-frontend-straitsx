@@ -21,8 +21,8 @@ const { REACT_APP_DEPLOYMENT } = process.env
 const CashOut = () => {
   const navigate = useNavigate()
   const username = localStorage.getItem('username')
-  // const customerId = localStorage.getItem('customerId')
-  const customerId = 'customer_profile_e0709472-086a-475d-9b00-aea5ac3c45e7'
+  const customerId = localStorage.getItem('customerId')
+  // const customerId = 'customer_profile_e0709472-086a-475d-9b00-aea5ac3c45e7'
   const accountNumber = localStorage.getItem('bankAccountRecipient')
   const isLoggedIn = localStorage.getItem('isLoggedIn')
   const exchangeBalance: any = localStorage.getItem('exchangeBalance')
@@ -99,6 +99,7 @@ const CashOut = () => {
             })
           : await processCashOutStraits({
               // username: username,
+              // customerProfileId: customerId,
               customerProfileId:
                 'customer_profile_83d91c19-9d38-4cbc-baa2-6c4bafd67d42',
               bankAccountNumber: '9122234441',

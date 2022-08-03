@@ -73,8 +73,9 @@ const CashIn = () => {
             })
           : await processCashInStraits({
               sourceAccountHolderName: username,
-              customerId: customerId,
-              destBankAccountNumber: accountNumber,
+              customerId:
+                'customer_profile_83d91c19-9d38-4cbc-baa2-6c4bafd67d42',
+              destBankAccountNumber: '9122234441',
               amount: data.amount,
             })
 
