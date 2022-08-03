@@ -58,7 +58,8 @@ const BankRecipient = () => {
   }
 
   const handleLengthValidation = (value) => {
-    return value.trim().length >= 8 && value.trim().length <= 16
+    let input = value || ''
+    return input.trim().length >= 8 && input.trim().length <= 16
   }
 
   return (
